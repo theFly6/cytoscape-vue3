@@ -17,7 +17,7 @@ export const arrayOfClusterArrays = [
 
   
 // 工具函数
-const rgbToHex = (rgb: number) => {
+export const rgbToHex = (rgb: number) => {
     let hex = Number(rgb).toString(16);
     if (hex.length < 2) {
       hex = "0" + hex;
@@ -25,11 +25,20 @@ const rgbToHex = (rgb: number) => {
     return hex;
   };
 
-const fullColorHex = (r: number, g: number, b: number) => {
+export const fullColorHex = (r: number, g: number, b: number) => {
   const red = rgbToHex(r)
   const green = rgbToHex(g)
   const blue = rgbToHex(b)
   return red + green + blue
+}
+
+// —— 工具函数
+export function hexToRgbString(hex: string): string {
+    const parsed = hex.replace("#", "");
+    const r = parseInt(parsed.substring(0, 2), 16);
+    const g = parseInt(parsed.substring(2, 4), 16);
+    const b = parseInt(parsed.substring(4, 6), 16);
+    return `rgb(${r} ${g} ${b})`;
 }
 
 export const options1 = {

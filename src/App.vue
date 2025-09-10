@@ -6,8 +6,11 @@ import { RouterLink, RouterView } from 'vue-router'
   <header>
     <div class="wrapper">
       <nav>
-        <RouterLink to="/">cytoscape</RouterLink>
+        <RouterLink to="/">topology</RouterLink>
+        <RouterLink to="/cytoscape">cytoscape</RouterLink>
+        <!-- <RouterLink to="/topology">topology</RouterLink> -->
         <RouterLink to="/graphml">graphml</RouterLink>
+        <RouterLink to="/playground">playground</RouterLink>
       </nav>
     </div>
   </header>

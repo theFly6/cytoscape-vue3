@@ -1,6 +1,14 @@
 <!-- CytoscapeGraph.vue -->
 <template>
     <div id="cy" class="cy" ref="cyContainer"></div>
+    <div v-show="contextMenuVisible" :style="{ top: contextMenuY + 'px', left: contextMenuX + 'px' }"
+        class="context-menu">
+        <ul>
+            <li @click="contextAddNode">添加节点</li>
+            <li @click="contextExpandNode">展开节点</li>
+            <li @click="contextCollapseNode">收缩节点</li>
+        </ul>
+    </div>
     <input ref="fileInput" type="file" style="display:none" @change="onFileChange" />
 </template>
 
@@ -8,7 +16,6 @@
 import { onMounted, ref } from 'vue'
 import cytoscape from '@/utils/cytoscape'
 
-import { elements, style, arrayOfClusterArrays as initClusters, options1 } from '@/data/graph'
 import type { ViewUtilitiesInstance } from '@/types/cytoscape'
 import type { LayoutUtilitiesInstance } from '@/types/cytoscape'
 
@@ -17,37 +24,79 @@ const fileInput = ref<HTMLInputElement | null>(null)
 let cy: cytoscape.Core
 
 // 选项配置
-import { useGraphSettingsStore } from '@/stores/graphSettings'
+import { useGraphSettings } from '@/stores/graphSettings'
 
-const settings = useGraphSettingsStore()
+const settings = useGraphSettings()
 
 // —— 非响应式变量
-let arrayOfClusterArrays: string[][] = JSON.parse(JSON.stringify(initClusters))
+const { elements, clusters, layoutOptions, style, fetchGraphData } = useGraphData('http://localhost:3000/api/graph')
+let arrayOfClusterArrays: string[][]
 let clusterColors: string[] = []
 let legendColors = ref()
+import { useGraphData } from '@/composables/cytoscape/useGraphData'
+import { hexToRgbString, fullColorHex } from '@/data/cytoscape-data'
+
+// 导入配置变量
+import { nodeBackgroundColor, nodeShape, edgeLineColor } from '@/data/styleFunctions'
+function restoreStyle(importedStyle: any[]) {
+    return importedStyle.map(rule => {
+        const newRule: any = { selector: rule.selector, style: {} }
+
+        Object.entries(rule.style).forEach(([k, v]) => {
+            if (k === "background-color") newRule.style[k] = nodeBackgroundColor
+            else if (k === "shape") newRule.style[k] = nodeShape
+            else if (k === "line-color") newRule.style[k] = edgeLineColor
+            else newRule.style[k] = v
+        })
+
+        return newRule
+    })
+}
 
 // —— 初始化 Cytoscape
-onMounted(() => {
+onMounted(async () => {
     if (!cyContainer.value) return
+    await fetchGraphData()
+    arrayOfClusterArrays = JSON.parse(JSON.stringify(clusters.value))
 
+    // 阻止右键菜单默认行为
+    document.addEventListener('contextmenu', (e) => {
+        e.preventDefault()
+    })
     cy = cytoscape({
-        container: document.getElementById('cy'),
-        layout: { name: 'concentric', clusters: arrayOfClusterArrays },
+        container: cyContainer.value,
+        layout: { name: 'concentric', clusters: clusters.value },
         ready: function () {
             // initialize layout-utilities extension
             this.layoutUtilities({
                 desiredAspectRatio: this.width() / this.height()
             });
         },
-        elements,
-        style,
+        elements: elements.value,
+        style: style.value,
         wheelSensitivity: 0.5,
     } as any)
+
+    cy.on('cxttap', 'node', (e) => {
+        e.preventDefault()
+        currentNode = e.target
+        contextMenuX.value = e.originalEvent.pageX
+        contextMenuY.value = e.originalEvent.pageY
+        contextMenuVisible.value = true
+    })
+
+    // 点击空白处隐藏菜单
+    cy.on('tap', (e) => {
+        if (!e.target || e.target === cy) {
+            contextMenuVisible.value = false
+        }
+    })
+
     // 初始化 layoutUtilities
     instance2 = cy.layoutUtilities("get")
 
     // 初始化 viewUtilities
-    instance1 = cy.viewUtilities(options1)
+    instance1 = cy.viewUtilities(layoutOptions.value)
 
     // 初始样式和 Legend
     legendColors.value = getClusterColorsFromElements()
@@ -55,29 +104,19 @@ onMounted(() => {
 
 // 测试
 const testFunc = () => {
-    console.log(cy)
+    console.log('test')
 }
 
 // —— CISE 实例
 let instance1: ViewUtilitiesInstance
 let instance2: LayoutUtilitiesInstance
 
-// —— 防止重复注册右键事件
-// let isRightClickRegistered = false
-// let prevClickedNodeId = ''
+const contextMenuVisible = ref(false)
+const contextMenuX = ref(0)
+const contextMenuY = ref(0)
+let currentNode: cytoscape.NodeSingular | null = null
 
-// —— 工具函数
-const rgbToHex = (rgb: number) => rgb.toString(16).padStart(2, '0')
-const fullColorHex = (r: number, g: number, b: number) => rgbToHex(r) + rgbToHex(g) + rgbToHex(b)
-function hexToRgbString(hex: string): string {
-    const parsed = hex.replace("#", "");
-    const r = parseInt(parsed.substring(0, 2), 16);
-    const g = parseInt(parsed.substring(2, 4), 16);
-    const b = parseInt(parsed.substring(4, 6), 16);
-    return `rgb(${r} ${g} ${b})`;
-}
-
-// —— 右键添加新节点
+// —— 右键添加节点功能
 function handleRightClickAddNodes(e: cytoscape.EventObject) {
     const clickedNode = e.target;
     const sourceId = clickedNode.data('id');
@@ -142,9 +181,7 @@ function handleRightClickAddNodes(e: cytoscape.EventObject) {
             remainingNodes.splice(idx1, 1); // 移除已使用的 idx1 节点，避免重复
         }
     }
-
     instance1?.highlight(collection);
-    updateLegend();
 }
 
 function updateLegend() {
@@ -164,13 +201,60 @@ function getClusterColorsFromElements() {
             colors.push(`rgb(${color})`) // 例如 "58 196 225" -> "rgb(58 196 225)"
         }
     }
-
     return colors
 }
 
+// 右键的三个功能函数
+function contextAddNode() {
+    if (currentNode) handleRightClickAddNodes({ target: currentNode } as any)
+    contextMenuVisible.value = false
+}
+
+function contextExpandNode() {
+    console.log('expand', currentNode?.data('id'))
+    contextMenuVisible.value = false
+}
+
+// 存放每个被收缩节点隐藏的邻居
+const collapsedMap = new Map<string, cytoscape.ElementDefinition[]>()
+function contextCollapseNode() {
+    if (!currentNode) return
+    const id = currentNode.id()
+
+    // 已经收缩过就不重复
+    if (collapsedMap.has(id)) {
+        contextMenuVisible.value = false
+        return
+    }
+
+    const neighbors = currentNode.connectedEdges().connectedNodes().filter(n => n.id() !== id)
+    const edges = currentNode.connectedEdges().filter(edge => {
+        const src = edge.source().id()
+        const tgt = edge.target().id()
+        return src === id || tgt === id
+    })
+
+    // 存储被隐藏的节点和边的定义
+    const hiddenElements: cytoscape.ElementDefinition[] = []
+
+    neighbors.forEach(node => {
+        hiddenElements.push({ group: 'nodes', data: node.data() })
+        node.remove()
+    })
+
+    edges.forEach(edge => {
+        // 只隐藏连接 collapsed 节点的边
+        hiddenElements.push({ group: 'edges', data: edge.data() })
+        edge.remove()
+    })
+
+    collapsedMap.set(id, hiddenElements)
+    contextMenuVisible.value = false
+}
+
+
 // —— 运行 CISE 布局
 function runCiseLayout() {
-    cy.nodes().on('cxttap', handleRightClickAddNodes)
     const layout = cy.layout({
         name: 'cise',
         nodeSeparation: settings.nodeSeparation,
@@ -366,10 +450,13 @@ function removeCluster() {
 
 // —— GraphML 导入功能
 function onImportClick() {
+    if (!fileInput.value) return
+    fileInput.value.value = ''  // 清空 value，确保选择同名文件也会触发 change
     fileInput.value?.click()
 }
 
 function onFileChange(evt: Event) {
+    console.log('导入graphml')
     const target = evt.target as HTMLInputElement
     const files = target.files
     if (!files || files.length === 0) return
@@ -377,14 +464,10 @@ function onFileChange(evt: Event) {
     reader.readAsText(files[0])
     reader.onload = (event) => {
         const contents = event.target?.result as string
-        console.log('$', $)
         // 调试输出
-        console.log('[DEBUG] GraphML contents:', contents.slice(0, 200))
-
         cy.style().clear()
         cy.remove('nodes')
         cy.remove('edges')
-        console.log(cy.graphml)
         cy.graphml({ layoutBy: "circle" })
         cy.graphml(contents);
 
@@ -453,6 +536,114 @@ function onFileChange(evt: Event) {
         updateLegend()
     }
 }
+
+function importGraphConfig(evt: Event) {
+    console.log("importGraphConfig")
+    const target = evt.target as HTMLInputElement
+    const files = target.files
+    if (!files || files.length === 0) return
+
+    const reader = new FileReader()
+    reader.readAsText(files[0])
+    reader.onload = async (event) => {
+        try {
+            const contents = event.target?.result as string
+            const data = JSON.parse(contents)
+            if (!cy) return
+
+            // 清空现有图
+            cy.elements().remove()
+            cy.style().clear().update()
+
+            // 添加节点和边
+            data.elements.forEach((ele: any) => cy.add(ele))
+
+            // 恢复簇和颜色
+            arrayOfClusterArrays = data.clusters
+            clusterColors = data.clusterColors
+
+            // 恢复 layoutOptions
+            layoutOptions.value = data.layoutOptions
+
+            // 恢复样式，函数样式从库中恢复
+            style.value = data.style.map((rule: any) => {
+                const newStyle: any = {}
+                Object.entries(rule.style).forEach(([k, v]) => {
+                    if (k === 'background-color') newStyle[k] = nodeBackgroundColor
+                    else if (k === 'shape') newStyle[k] = nodeShape
+                    else if (k === 'line-color') newStyle[k] = edgeLineColor
+                    else newStyle[k] = v
+                })
+                return {
+                    selector: rule.selector,
+                    style: newStyle
+                }
+            })
+
+            // 更新 Cytoscape 样式
+            cy.style(style.value)
+
+            // 更新图例
+            updateLegend()
+
+            // 可选：运行布局
+            const layout = cy.layout({ name: 'concentric', clusters: arrayOfClusterArrays } as any)
+            layout.run()
+        } catch (err) {
+            console.error('导入配置失败', err)
+        }
+    }
+}
+
+const exportGraphConfig = () => {
+    if (!cy) return;
+
+    // 1. 获取节点和边元素
+    const elementsToExport = cy.elements().map(ele => {
+        const data = { ...ele.data() }  // 深拷贝节点数据
+        // 可选：把函数 style 或不可序列化字段去掉
+        return { group: ele.group(), data }
+    })
+
+    // 2. 保存簇数组和颜色
+    const clustersToExport = arrayOfClusterArrays
+    const colorsToExport = legendColors.value
+
+    // 3. 保存 layoutOptions
+    const layoutOptionsToExport = layoutOptions.value
+
+    // 4. 保存 style（函数不能直接序列化，建议只保存字符串化的或纯数据样式）
+    const styleToExport = style.value.map(rule => {
+        return {
+            selector: rule.selector,
+            style: Object.fromEntries(
+                Object.entries(rule.style).map(([k, v]) => [
+                    k,
+                    typeof v === 'function' ? v.toString() : v
+                ])
+            )
+        }
+    })
+    console.log('clusterColors', legendColors)
+    // 5. 整合成 JSON
+    const exportData = {
+        elements: elementsToExport,
+        clusters: clustersToExport,
+        clusterColors: colorsToExport,
+        layoutOptions: layoutOptionsToExport,
+        style: styleToExport
+    }
+
+    // 6. 下载文件
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'graph-config.json'
+    a.click()
+    URL.revokeObjectURL(url)
+}
+
 // 暴露给父组件调用
 defineExpose({
     runCiseLayout,
@@ -461,7 +652,9 @@ defineExpose({
     clusterColors: legendColors,
     removeHighlights,
     testFunc,
-    onImportClick
+    onImportClick,
+    importGraphConfig,
+    exportGraphConfig
 })
 </script>
 
@@ -469,5 +662,29 @@ defineExpose({
 .cy {
     width: 100%;
     height: 90vh;
+}
+
+.context-menu {
+    position: absolute;
+    background: #fff;
+    border: 1px solid #ccc;
+    z-index: 1000;
+    width: 150px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.context-menu ul {
+    list-style: none;
+    padding: 5px 0;
+    margin: 0;
+}
+
+.context-menu li {
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.context-menu li:hover {
+    background-color: #f0f0f0;
 }
 </style>

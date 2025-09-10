@@ -87,16 +87,27 @@
         <button @click="$emit('remove-cluster')">移除Cluster</button>
         <button @click="$emit('import-graphml')">导入GraphML</button>
         <button @click="$emit('run-cise')">运行CISE布局</button>
+        <button @click="handleImportConfigClick">导入JSON配置</button>
+        <input ref="importInput" type="file" style="display:none" @change="$emit('import-config', $event)" />
+        <button @click="$emit('export-config')">导出JSON配置</button>
+        <button @click="$emit('test-func')">测试功能</button>
     </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useGraphSettingsStore } from '@/stores/graphSettings'
+import { useGraphSettings } from '@/stores/graphSettings'
 import informationImg from '@/assets/information-button.png'
 
-const settings = useGraphSettingsStore()
+const importInput = ref<HTMLInputElement>()
+const settings = useGraphSettings()
 const isFormOpen = ref(false)
+
+function handleImportConfigClick() {
+    if (!importInput.value) return
+    importInput.value.value = ''  // 清空 value
+    importInput.value.click()
+}
 
 defineEmits([
     'remove-highlights',
@@ -104,6 +115,8 @@ defineEmits([
     'remove-cluster',
     'import-graphml',
     'run-cise',
+    'import-config',
+    'export-config',
     'test-func'
 ])
 </script>

@@ -1,3 +1,4 @@
+<!-- GraphMLPage.vue -->
 <template>
   <div class="cy-container">
     <div ref="cyContainer" class="cy" />
@@ -7,7 +8,7 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 
-import { arrayOfClusterArrays } from '@/data/graph'
+import { arrayOfClusterArrays } from '@/data/cytoscape-data'
 
 let cy
 const cyContainer = ref(null)

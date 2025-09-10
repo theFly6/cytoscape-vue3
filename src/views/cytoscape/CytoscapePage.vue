@@ -4,7 +4,8 @@
     <!-- 左上角的功能按键 -->
     <GraphControls @run-cise="graphRef?.runCiseLayout()" @remove-highlights="graphRef?.removeHighlights()"
       @add-cluster="graphRef?.addCluster()" @remove-cluster="graphRef?.removeCluster()"
-      @import-graphml="graphRef?.onImportClick" @test-func="graphRef?.testFunc()" />
+      @import-graphml="graphRef?.onImportClick" @test-func="graphRef?.testFunc()"
+      @import-config="graphRef?.importGraphConfig($event)" @export-config="graphRef?.exportGraphConfig()" />
     <!-- 封装 Cytoscape 的图视图及相关布局逻辑 -->
     <CytoscapeGraph ref="graphRef" />
     <!-- 显示图例（legend），响应式更新颜色 -->

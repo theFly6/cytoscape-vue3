@@ -1,4 +1,4 @@
 declare module 'cytoscape-layout-utilities' {
-  const cise: any
-  export default cise
+  const cytoscape: any
+  export default cytoscape
 }

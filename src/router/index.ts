@@ -1,19 +1,35 @@
 import { createRouter, createWebHistory } from 'vue-router'
-// import CytoscapeView from '../views/CytoscapeView.vue'
 import CytoscapePage from '../views/cytoscape/CytoscapePage.vue'
-import Graphml from '../views/Graphml.vue'
+import GraphmlPage from '../views/graphml/GraphmlPage.vue'
+import PlayGround from '../views/playground/PlayGround.vue'
+import TopologyPage from '../views/topology/TopologyPage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
+      component: TopologyPage,
+    },
+    {
+      path: '/cytoscape',
+      name: 'cytoscape',
       component: CytoscapePage,
     },
     {
       path: '/graphml',
       name: 'graphml',
-      component: Graphml,
+      component: GraphmlPage,
+    },
+    {
+      path: '/playground',
+      name: 'playground',
+      component: PlayGround,
+    },
+    {
+      path: '/topology',
+      name: 'topology',
+      component: TopologyPage,
     },
     // {
     //   path: '/cytoscape',

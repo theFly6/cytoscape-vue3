@@ -2,7 +2,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
-export const useGraphSettingsStore = defineStore('graphSettings', () => {
+export const useGraphSettings = defineStore('graphSettings', () => {
   const animationType = ref<'end' | 'during'>('end')
   const nodeSeparation = ref(12.5)
   const allowNodesInCircles = ref(false)

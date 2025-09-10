@@ -22,7 +22,7 @@ const props = defineProps<{ colors: string[] }>()
 watch(
     () => props.colors,
     (newColors, oldColors) => {
-        console.log('colors changed:', newColors)
+        // console.log('colors changed:', newColors)
     },
     { deep: true } // 数组或对象变化要加 deep
 )

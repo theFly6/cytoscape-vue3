@@ -1,4 +1,4 @@
-declare module 'cytoscape-view-utilities' {
+declare module 'cytoscape-expand-collapse' {
   const cytoscape: any
   export default cytoscape
 }
