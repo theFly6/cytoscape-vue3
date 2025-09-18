@@ -1,0 +1,1499 @@
+{
+  "elements": [
+    {
+      "group": "nodes",
+      "data": {
+        "id": "lg-001",
+        "depth": 1,
+        "x": "-268",
+        "y": "386",
+        "width": "30",
+        "height": "30",
+        "color": "238 238 238",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "sw-001",
+        "depth": 1,
+        "x": "-94",
+        "y": "334",
+        "width": "30",
+        "height": "30",
+        "color": "238 238 238",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "cp-001",
+        "depth": 1,
+        "x": "-473",
+        "y": "-219",
+        "width": "30",
+        "height": "30",
+        "color": "238 238 238",
+        "borderColor": "204 204 204",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "cp-002",
+        "depth": 1,
+        "x": "387",
+        "y": "-134",
+        "width": "30",
+        "height": "30",
+        "color": "238 238 238",
+        "borderColor": "204 204 204",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "cp-002-nvlink",
+        "depth": 2,
+        "x": "244",
+        "y": "-424",
+        "width": "30",
+        "height": "30",
+        "color": "229 203 78",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "cp-002"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "cp-001-numa0",
+        "depth": 2,
+        "x": "-703",
+        "y": "-254",
+        "width": "30",
+        "height": "30",
+        "color": "240 87 169",
+        "borderColor": "204 204 204",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "cp-001"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "cp-001-numa1",
+        "depth": 2,
+        "x": "-238",
+        "y": "-238",
+        "width": "30",
+        "height": "30",
+        "color": "240 87 169",
+        "borderColor": "204 204 204",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "cp-001",
+        "expandcollapseRenderedStartX": 266.70815231451,
+        "expandcollapseRenderedStartY": 272.04537147260714,
+        "expandcollapseRenderedCueSize": 12
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "cp-002-numa0",
+        "depth": 2,
+        "x": "595",
+        "y": "-114",
+        "width": "30",
+        "height": "30",
+        "color": "234 209 155",
+        "borderColor": "204 204 204",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "cp-002"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "cp-002-numa1",
+        "depth": 2,
+        "x": "221",
+        "y": "-211",
+        "width": "30",
+        "height": "30",
+        "color": "234 209 155",
+        "borderColor": "204 204 204",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "cp-002"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "cp-001-cpi",
+        "depth": 2,
+        "x": "-463",
+        "y": "52",
+        "width": "30",
+        "height": "30",
+        "color": "76 123 67",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "cp-001"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "cp-002-upi",
+        "depth": 2,
+        "x": "453",
+        "y": "191",
+        "width": "30",
+        "height": "30",
+        "color": "76 92 147",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "cp-002"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "cp-001-nvlink",
+        "depth": 2,
+        "x": "-443",
+        "y": "-463",
+        "width": "30",
+        "height": "30",
+        "color": "243 176 204",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "cp-001"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "cp-002-gpu4",
+        "depth": 3,
+        "x": "208",
+        "y": "-327",
+        "width": "30",
+        "height": "30",
+        "color": "228 20 164",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "cp-002-numa1"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "cp-002-gpu5",
+        "depth": 3,
+        "x": "243",
+        "y": "-286",
+        "width": "30",
+        "height": "30",
+        "color": "228 20 164",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "cp-002-numa1"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "cp-002-gpu6",
+        "depth": 3,
+        "x": "254",
+        "y": "-414",
+        "width": "30",
+        "height": "30",
+        "color": "228 20 164",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "cp-002-numa1"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "cp-002-gpu7",
+        "depth": 3,
+        "x": "213",
+        "y": "-380",
+        "width": "30",
+        "height": "30",
+        "color": "228 20 164",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "cp-002-numa1"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "cp-001-nic0",
+        "depth": 3,
+        "x": "-814",
+        "y": "-46",
+        "width": "30",
+        "height": "30",
+        "color": "59 29 142",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "cp-001-numa0"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "cp-001-nic1",
+        "depth": 3,
+        "x": "-726",
+        "y": "-83",
+        "width": "30",
+        "height": "30",
+        "color": "105 174 86",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "cp-001-numa0"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "cp-001-nic2",
+        "depth": 3,
+        "x": "-119",
+        "y": "-78",
+        "width": "30",
+        "height": "30",
+        "color": "193 225 63",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "cp-001-numa1"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "cp-001-nic3",
+        "depth": 3,
+        "x": "-357",
+        "y": "-142",
+        "width": "30",
+        "height": "30",
+        "color": "66 221 164",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "cp-001-numa1"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "cp-002-nic0",
+        "depth": 3,
+        "x": "571",
+        "y": "-34",
+        "width": "30",
+        "height": "30",
+        "color": "9 73 167",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "cp-002-numa0"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "cp-002-nic1",
+        "depth": 3,
+        "x": "673",
+        "y": "0",
+        "width": "30",
+        "height": "30",
+        "color": "104 42 44",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "cp-002-numa0"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "cp-002-nic2",
+        "depth": 3,
+        "x": "245",
+        "y": "-129",
+        "width": "30",
+        "height": "30",
+        "color": "32 49 92",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "cp-002-numa1"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "cp-002-nic3",
+        "depth": 3,
+        "x": "186",
+        "y": "-90",
+        "width": "30",
+        "height": "30",
+        "color": "15 57 122",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "cp-002-numa1"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "cp-001-cpu0",
+        "depth": 3,
+        "x": "-581",
+        "y": "-63",
+        "width": "30",
+        "height": "30",
+        "color": "163 168 163",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "cp-001-numa0"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "cp-001-cpu1",
+        "depth": 3,
+        "x": "-232",
+        "y": "-48",
+        "width": "30",
+        "height": "30",
+        "color": "163 168 163",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "cp-001-numa1"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "cp-002-cpu0",
+        "depth": 3,
+        "x": "596",
+        "y": "109",
+        "width": "30",
+        "height": "30",
+        "color": "168 193 192",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "cp-002-numa0"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "cp-002-cpu1",
+        "depth": 3,
+        "x": "348",
+        "y": "9",
+        "width": "30",
+        "height": "30",
+        "color": "168 193 192",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "cp-002-numa1"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "cp-001-pcie0",
+        "depth": 3,
+        "x": "-788",
+        "y": "-192",
+        "width": "30",
+        "height": "30",
+        "color": "252 51 223",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "cp-001-numa0"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "cp-001-pcie1",
+        "depth": 3,
+        "x": "-822",
+        "y": "-288",
+        "width": "30",
+        "height": "30",
+        "color": "196 107 10",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "cp-001-numa0"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "cp-001-pcie2",
+        "depth": 3,
+        "x": "-124",
+        "y": "-257",
+        "width": "30",
+        "height": "30",
+        "color": "110 114 25",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "cp-001-numa1"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "cp-001-pcie3",
+        "depth": 3,
+        "x": "-222",
+        "y": "-178",
+        "width": "30",
+        "height": "30",
+        "color": "226 214 174",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "cp-001-numa1"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "cp-002-pcie0",
+        "depth": 3,
+        "x": "678",
+        "y": "-219",
+        "width": "30",
+        "height": "30",
+        "color": "180 180 238",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "cp-002-numa0"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "cp-001-gpu5",
+        "depth": 3,
+        "x": "-266",
+        "y": "-317",
+        "width": "30",
+        "height": "30",
+        "color": "58 142 154",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "cp-001-numa1"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "cp-001-gpu6",
+        "depth": 3,
+        "x": "-299",
+        "y": "-410",
+        "width": "30",
+        "height": "30",
+        "color": "58 142 154",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "cp-001-numa1"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "cp-001-gpu7",
+        "depth": 3,
+        "x": "-306",
+        "y": "-281",
+        "width": "30",
+        "height": "30",
+        "color": "58 142 154",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "cp-001-numa1"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "cp-002-gpu3",
+        "depth": 3,
+        "x": "556",
+        "y": "-280",
+        "width": "30",
+        "height": "30",
+        "color": "228 20 164",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "cp-002-numa0"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "cp-002-pcie1",
+        "depth": 3,
+        "x": "667",
+        "y": "-127",
+        "width": "30",
+        "height": "30",
+        "color": "207 251 85",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "cp-002-numa0"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "cp-002-pcie2",
+        "depth": 3,
+        "x": "98",
+        "y": "-186",
+        "width": "30",
+        "height": "30",
+        "color": "163 173 112",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "cp-002-numa1"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "cp-002-pcie3",
+        "depth": 3,
+        "x": "96",
+        "y": "-283",
+        "width": "30",
+        "height": "30",
+        "color": "64 49 150",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "cp-002-numa1"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "cp-001-gpu0",
+        "depth": 3,
+        "x": "-714",
+        "y": "-356",
+        "width": "30",
+        "height": "30",
+        "color": "58 142 154",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "cp-001-numa0"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "cp-001-gpu1",
+        "depth": 3,
+        "x": "-678",
+        "y": "-316",
+        "width": "30",
+        "height": "30",
+        "color": "58 142 154",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "cp-001-numa0"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "cp-001-gpu2",
+        "depth": 3,
+        "x": "-711",
+        "y": "-409",
+        "width": "30",
+        "height": "30",
+        "color": "58 142 154",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "cp-001-numa0"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "cp-001-gpu3",
+        "depth": 3,
+        "x": "-671",
+        "y": "-445",
+        "width": "30",
+        "height": "30",
+        "color": "58 142 154",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "cp-001-numa0"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "cp-001-gpu4",
+        "depth": 3,
+        "x": "-263",
+        "y": "-371",
+        "width": "30",
+        "height": "30",
+        "color": "58 142 154",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "cp-001-numa1"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "cp-002-gpu0",
+        "depth": 3,
+        "x": "552",
+        "y": "-227",
+        "width": "30",
+        "height": "30",
+        "color": "228 20 164",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "cp-002-numa0"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "cp-002-gpu1",
+        "depth": 3,
+        "x": "522",
+        "y": "-321",
+        "width": "30",
+        "height": "30",
+        "color": "228 20 164",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "cp-002-numa0"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "cp-002-gpu2",
+        "depth": 3,
+        "x": "511",
+        "y": "-193",
+        "width": "30",
+        "height": "30",
+        "color": "228 20 164",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "cp-002-numa0"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e0",
+        "source": "cp-002-gpu4",
+        "target": "cp-002-nvlink"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e1",
+        "source": "cp-002-gpu5",
+        "target": "cp-002-nvlink"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e2",
+        "source": "cp-002-gpu6",
+        "target": "cp-002-nvlink"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e3",
+        "source": "cp-002-gpu7",
+        "target": "cp-002-nvlink"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e4",
+        "source": "lg-001",
+        "target": "sw-001"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e5",
+        "source": "sw-001",
+        "target": "cp-001"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e6",
+        "source": "sw-001",
+        "target": "cp-001"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e7",
+        "source": "sw-001",
+        "target": "cp-001"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e8",
+        "source": "sw-001",
+        "target": "cp-001"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e9",
+        "source": "sw-001",
+        "target": "cp-002"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e10",
+        "source": "sw-001",
+        "target": "cp-002"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e11",
+        "source": "sw-001",
+        "target": "cp-002"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e12",
+        "source": "sw-001",
+        "target": "cp-002"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e13",
+        "source": "cp-001",
+        "target": "cp-001-numa0"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e14",
+        "source": "cp-001",
+        "target": "cp-001-numa1"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e15",
+        "source": "cp-002",
+        "target": "cp-002-numa0"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e16",
+        "source": "cp-002",
+        "target": "cp-002-numa1"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e17",
+        "source": "cp-001-numa0",
+        "target": "cp-001-nic0"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e18",
+        "source": "cp-001-numa0",
+        "target": "cp-001-nic1"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e19",
+        "source": "cp-001-numa1",
+        "target": "cp-001-nic2"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e20",
+        "source": "cp-001-numa1",
+        "target": "cp-001-nic3"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e21",
+        "source": "cp-002-numa0",
+        "target": "cp-002-nic0"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e22",
+        "source": "cp-002-numa0",
+        "target": "cp-002-nic1"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e23",
+        "source": "cp-002-numa1",
+        "target": "cp-002-nic2"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e24",
+        "source": "cp-002-numa1",
+        "target": "cp-002-nic3"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e25",
+        "source": "cp-001-cpu0",
+        "target": "cp-001-cpi"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e26",
+        "source": "cp-001-cpu1",
+        "target": "cp-001-cpi"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e27",
+        "source": "cp-002-cpu0",
+        "target": "cp-002-upi"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e28",
+        "source": "cp-002-cpu1",
+        "target": "cp-002-upi"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e29",
+        "source": "cp-001-cpi",
+        "target": "cp-001-cpu0"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e30",
+        "source": "cp-001-cpi",
+        "target": "cp-001-cpu1"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e31",
+        "source": "cp-002-upi",
+        "target": "cp-002-cpu0"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e32",
+        "source": "cp-002-upi",
+        "target": "cp-002-cpu1"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e33",
+        "source": "cp-001-nic0",
+        "target": "cp-001-cpu0"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e34",
+        "source": "cp-001-nic0",
+        "target": "cp-001-pcie0"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e35",
+        "source": "cp-001-nic1",
+        "target": "cp-001-cpu0"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e36",
+        "source": "cp-001-nic1",
+        "target": "cp-001-pcie1"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e37",
+        "source": "cp-001-nic2",
+        "target": "cp-001-cpu1"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e38",
+        "source": "cp-001-nic2",
+        "target": "cp-001-pcie2"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e39",
+        "source": "cp-001-nic3",
+        "target": "cp-001-cpu1"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e40",
+        "source": "cp-001-nic3",
+        "target": "cp-001-pcie3"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e41",
+        "source": "cp-002-nic0",
+        "target": "cp-002-cpu0"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e42",
+        "source": "cp-002-nic0",
+        "target": "cp-002-pcie0"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e43",
+        "source": "cp-001-gpu5",
+        "target": "cp-001-nvlink"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e44",
+        "source": "cp-001-gpu6",
+        "target": "cp-001-nvlink"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e45",
+        "source": "cp-001-gpu7",
+        "target": "cp-001-nvlink"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e46",
+        "source": "cp-002-gpu3",
+        "target": "cp-002-nvlink"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e47",
+        "source": "cp-002-nic1",
+        "target": "cp-002-cpu0"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e48",
+        "source": "cp-002-nic1",
+        "target": "cp-002-pcie1"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e49",
+        "source": "cp-002-nic2",
+        "target": "cp-002-cpu1"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e50",
+        "source": "cp-002-nic2",
+        "target": "cp-002-pcie2"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e51",
+        "source": "cp-002-nic3",
+        "target": "cp-002-cpu1"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e52",
+        "source": "cp-002-nic3",
+        "target": "cp-002-pcie3"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e53",
+        "source": "cp-001-pcie0",
+        "target": "cp-001-gpu0"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e54",
+        "source": "cp-001-pcie0",
+        "target": "cp-001-gpu1"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e55",
+        "source": "cp-001-pcie1",
+        "target": "cp-001-gpu2"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e56",
+        "source": "cp-001-pcie1",
+        "target": "cp-001-gpu3"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e57",
+        "source": "cp-001-pcie2",
+        "target": "cp-001-gpu5"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e58",
+        "source": "cp-001-pcie2",
+        "target": "cp-001-gpu4"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e59",
+        "source": "cp-001-pcie3",
+        "target": "cp-001-gpu6"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e60",
+        "source": "cp-001-pcie3",
+        "target": "cp-001-gpu7"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e61",
+        "source": "cp-002-pcie0",
+        "target": "cp-002-gpu0"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e62",
+        "source": "cp-002-pcie0",
+        "target": "cp-002-gpu1"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e63",
+        "source": "cp-002-gpu0",
+        "target": "cp-002-nvlink"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e64",
+        "source": "cp-002-pcie1",
+        "target": "cp-002-gpu3"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e65",
+        "source": "cp-002-pcie1",
+        "target": "cp-002-gpu2"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e66",
+        "source": "cp-002-pcie2",
+        "target": "cp-002-gpu4"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e67",
+        "source": "cp-002-pcie2",
+        "target": "cp-002-gpu5"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e68",
+        "source": "cp-002-gpu1",
+        "target": "cp-002-nvlink"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e69",
+        "source": "cp-002-gpu2",
+        "target": "cp-002-nvlink"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e70",
+        "source": "cp-002-pcie3",
+        "target": "cp-002-gpu6"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e71",
+        "source": "cp-002-pcie3",
+        "target": "cp-002-gpu7"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e72",
+        "source": "cp-001-gpu0",
+        "target": "cp-001-nvlink"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e73",
+        "source": "cp-001-gpu1",
+        "target": "cp-001-nvlink"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e74",
+        "source": "cp-001-gpu2",
+        "target": "cp-001-nvlink"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e75",
+        "source": "cp-001-gpu3",
+        "target": "cp-001-nvlink"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e76",
+        "source": "cp-001-gpu4",
+        "target": "cp-001-nvlink"
+      }
+    }
+  ],
+  "style": [
+    {
+      "selector": "node",
+      "style": {
+        "line-color": "fn",
+        "label": "data(id)",
+        "width": "data(width)",
+        "height": "data(height)",
+        "content": "data(id)"
+      }
+    },
+    {
+      "selector": "edge",
+      "style": {}
+    }
+  ]
+}

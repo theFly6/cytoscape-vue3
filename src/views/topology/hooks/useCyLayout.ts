@@ -26,7 +26,8 @@ export function useCyLayout(cy: Ref<cytoscape.Core | undefined>, options?: cytos
             .map(arr => arr.filter(id => visibleNodes?.includes(id))) // 只保留可见节点
             .filter(arr => arr.length > 0) // 移除空 cluster
 
-        console.log('运行 Cise clusters:', clusters)
+        console.log('clusterColorMap:', clusterColorMap.value)
+        console.log(' clusters:', clusters)
 
         const layOutOption = {
             name: 'cise',
@@ -43,10 +44,7 @@ export function useCyLayout(cy: Ref<cytoscape.Core | undefined>, options?: cytos
             packComponents: settings.packComponents.value,
             clusters  // 每个父节点作为一个 cluster
         } as cytoscape.LayoutOptions
-        console.log('layOutOption', layOutOption, settings)
         const layout = cy.value?.layout(layOutOption);
-
-        console.log('clusters', clusters)
 
         layout?.run()
     }

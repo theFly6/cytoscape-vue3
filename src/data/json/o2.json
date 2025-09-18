@@ -1,0 +1,367 @@
+{
+  "elements": [
+    {
+      "group": "nodes",
+      "data": {
+        "id": "n0",
+        "depth": 1,
+        "x": "426",
+        "y": "30",
+        "width": "30",
+        "height": "30",
+        "color": "158 96 86",
+        "borderColor": "34 101 151",
+        "textColor": "17 17 17",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "n1",
+        "depth": 1,
+        "x": "625",
+        "y": "88",
+        "width": "30",
+        "height": "30",
+        "color": "158 96 86",
+        "borderColor": "34 101 151",
+        "textColor": "17 17 17",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "n2",
+        "depth": 1,
+        "clusterID": 4,
+        "x": "760",
+        "y": "244",
+        "width": "30",
+        "height": "30",
+        "color": "158 96 86",
+        "borderColor": "34 101 151",
+        "textColor": "17 17 17",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "n3",
+        "depth": 1,
+        "clusterID": 4,
+        "x": "789",
+        "y": "449",
+        "width": "30",
+        "height": "30",
+        "color": "158 96 86",
+        "borderColor": "34 101 151",
+        "textColor": "17 17 17",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "n4",
+        "depth": 1,
+        "clusterID": 4,
+        "x": "703",
+        "y": "637",
+        "width": "30",
+        "height": "30",
+        "color": "158 96 86",
+        "borderColor": "34 101 151",
+        "textColor": "17 17 17",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "n5",
+        "depth": 1,
+        "clusterID": 0,
+        "x": "340",
+        "y": "686",
+        "width": "30",
+        "height": "30",
+        "color": "158 96 86",
+        "borderColor": "34 101 151",
+        "textColor": "17 17 17",
+        "shape": "Rectangle",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "n5::n0",
+        "parent": "n5",
+        "depth": 2,
+        "clusterID": 1,
+        "x": "530",
+        "y": "748",
+        "width": "30",
+        "height": "30",
+        "color": "238 238 238",
+        "borderColor": "34 101 151",
+        "textColor": "17 17 17",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "n5::n1",
+        "parent": "n5",
+        "depth": 2,
+        "clusterID": 1,
+        "x": "323",
+        "y": "748",
+        "width": "30",
+        "height": "30",
+        "color": "238 238 238",
+        "borderColor": "34 101 151",
+        "textColor": "17 17 17",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "n5::n2",
+        "parent": "n5",
+        "depth": 2,
+        "clusterID": 1,
+        "x": "150",
+        "y": "637",
+        "width": "30",
+        "height": "30",
+        "color": "238 238 238",
+        "borderColor": "34 101 151",
+        "textColor": "17 17 17",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "n6",
+        "depth": 1,
+        "clusterID": 2,
+        "x": "135",
+        "y": "268",
+        "width": "30",
+        "height": "30",
+        "color": "158 96 86",
+        "borderColor": "34 101 151",
+        "textColor": "17 17 17",
+        "shape": "Rectangle",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "n6::n0",
+        "parent": "n6",
+        "depth": 2,
+        "clusterID": 3,
+        "x": "64",
+        "y": "442",
+        "width": "30",
+        "height": "30",
+        "color": "58 196 86",
+        "borderColor": "34 101 151",
+        "textColor": "17 17 17",
+        "shape": "Rectangle",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "n6::n0::n0",
+        "parent": "n6::n0",
+        "depth": 3,
+        "clusterID": 4,
+        "x": "64",
+        "y": "449",
+        "width": "30",
+        "height": "30",
+        "color": "38 22 186",
+        "borderColor": "34 101 151",
+        "textColor": "17 17 17",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "n6::n1",
+        "parent": "n6",
+        "depth": 2,
+        "clusterID": 4,
+        "x": "93",
+        "y": "244",
+        "width": "30",
+        "height": "30",
+        "color": "58 196 86",
+        "borderColor": "34 101 151",
+        "textColor": "17 17 17",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "n6::n2",
+        "parent": "n6",
+        "depth": 2,
+        "clusterID": 4,
+        "x": "228",
+        "y": "88",
+        "width": "30",
+        "height": "30",
+        "color": "58 196 86",
+        "borderColor": "34 101 151",
+        "textColor": "17 17 17",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e0",
+        "source": "n5::n0",
+        "target": "n5::n2"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e1",
+        "source": "n5::n1",
+        "target": "n5::n2"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e10",
+        "source": "n6::n1",
+        "target": "n6::n0::n0"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e11",
+        "source": "n6::n1",
+        "target": "n6::n2"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e2",
+        "source": "n5::n2",
+        "target": "n0"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e3",
+        "source": "n0",
+        "target": "n2"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e4",
+        "source": "n0",
+        "target": "n1"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e5",
+        "source": "n1",
+        "target": "n3"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e6",
+        "source": "n3",
+        "target": "n2"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e7",
+        "source": "n2",
+        "target": "n4"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e8",
+        "source": "n3",
+        "target": "n6::n1"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e9",
+        "source": "n6::n1",
+        "target": "n4"
+      }
+    }
+  ],
+  "style": [
+    {
+      "selector": "node",
+      "style": {}
+    },
+    {
+      "selector": "edge",
+      "style": {}
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 // ./hooks/useJSONAction.ts
 import { ref, type Ref } from 'vue'
+import axios from 'axios'
 
 // 引入 cy 实例 hook
 import { useCyInstance } from '../hooks/useCyInstance'
@@ -21,6 +22,63 @@ import { nodeBackgroundColor, nodeShape, edgeLineColor, rgbToNumberString, capit
 
 
 export function useJSONAction(cy: Ref<cytoscape.Core | undefined>) {
+
+    const importNeo4jData = useDebounceFn(async () => {
+        try {
+            const res = await axios.get('http://localhost:3000/topology/cytoscape')
+            const data = res.data
+
+            // 清空现有图
+            cy.value?.elements().remove()
+            cy.value?.style().clear().update()
+
+            // 添加节点和边
+            data.elements.forEach((ele: any) => {
+                const position =
+                    ele.group === 'nodes' && ele.data.x && ele.data.y
+                        ? {
+                            x: parseFloat(ele.data.x),
+                            y: parseFloat(ele.data.y)
+                        }
+                        : undefined
+
+                cy.value?.add({
+                    group: ele.group,
+                    data: ele.data,
+                    position
+                })
+            })
+
+            // 样式恢复
+            data.style = data.style || [
+                { "selector": "node", "style": {} },
+                { "selector": "edge", "style": {} }
+            ]
+            const style = data.style.map((rule: any) => ({
+                selector: rule.selector,
+                style: rule.selector === 'node' ? {
+                    'background-color': nodeBackgroundColor,
+                    'shape': nodeShape,
+                    'line-color': edgeLineColor,
+                    content: rule.style?.content || 'data(id)',
+                    width: rule.style?.width || 'data(width)',
+                    height: rule.style?.height || 'data(height)',
+                } : rule.style
+            }))
+
+            cy.value?.style(style)
+
+            // 更新图例
+            mapClusterColors()
+
+            cy.value?.layout({ name: 'cise' }).run()
+
+            console.log('导入 Neo4j 数据成功')
+        } catch (err) {
+            console.error('导入 Neo4j 数据失败', err)
+        }
+    }, 300)
+
     const importGraphConfig = useDebounceFn((evt: Event) => {
         console.log("importGraphConfig")
         const target = evt.target as HTMLInputElement
@@ -39,21 +97,40 @@ export function useJSONAction(cy: Ref<cytoscape.Core | undefined>) {
                 cy.value?.style().clear().update()
 
                 // 添加节点和边
-                data.elements.forEach((ele: any) => cy.value?.add(ele))
+                data.elements.forEach((ele: any) => {
+                    // 将 position 从 data 中提取出来
+                    const position =
+                        ele.group === 'nodes' && ele.data.x && ele.data.y
+                            ? {
+                                x: parseFloat(ele.data.x),
+                                y: parseFloat(ele.data.y)
+                            }
+                            : undefined
+                    console.log('添加元素:', ele, position, ele.data.x, typeof ele.data.x);
+                    cy.value?.add({
+                        group: ele.group,
+                        data: ele.data,
+                        position // 只有是 node 并且 x/y 存在才添加
+                    })
+                })
 
                 // 恢复样式，函数样式从库中恢复
+                data.style = data.style || [
+                    { "selector": "node", "style": {} },
+                    { "selector": "edge", "style": {} }
+                ]
                 const style = data.style.map((rule: any) => ({
                     selector: rule.selector,
                     style: rule.selector === 'node' ? {
                         'background-color': nodeBackgroundColor,
                         'shape': nodeShape,
                         'line-color': edgeLineColor,
-                        content: rule.style.content,
-                        width: rule.style.width,
-                        height: rule.style.height
+                        content: rule.style?.content || 'data(id)',
+                        width: rule.style?.width || 'data(width)',
+                        height: rule.style?.height || 'data(height)',
                     } : rule.style
                 }))
-
+                console.log('应用样式:', style);
                 // 更新 Cytoscape 样式
                 cy.value?.style(style)
 
@@ -61,7 +138,7 @@ export function useJSONAction(cy: Ref<cytoscape.Core | undefined>) {
                 mapClusterColors();
 
                 // 重新布局
-                cy.value?.layout({ name: 'concentric' }).run()
+                // cy.value?.layout({ name: 'concentric' }).run()
             } catch (err) {
                 console.error('导入配置失败', err)
             }
@@ -163,5 +240,5 @@ export function useJSONAction(cy: Ref<cytoscape.Core | undefined>) {
         }
     }, 300)
 
-    return { importGraphConfig, importInput, exportGraphConfig }
+    return { importGraphConfig, importInput, exportGraphConfig, importNeo4jData }
 }

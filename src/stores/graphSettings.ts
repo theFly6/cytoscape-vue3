@@ -12,6 +12,7 @@ export const useGraphSettings = defineStore('graphSettings', () => {
   const randomize = ref(true)
   const fit = ref(true)
   const markovClusteringApplied = ref(true)
+  const isFormOpen = ref(false)
 
   return {
     animationType,
@@ -22,6 +23,7 @@ export const useGraphSettings = defineStore('graphSettings', () => {
     packComponents,
     randomize,
     fit,
-    markovClusteringApplied
+    markovClusteringApplied,
+    isFormOpen
   }
 })

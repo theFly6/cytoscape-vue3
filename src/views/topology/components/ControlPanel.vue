@@ -25,9 +25,10 @@
         <input ref="fileInput" type="file" style="display:none" @change="onFileChange" />
         <BaseButton @click="importGraphML">导入GraphML</BaseButton>
         <BaseButton @click="importJsonConfig">导入JSON配置</BaseButton>
+        <BaseButton @click="importNeo4jData">导入Neo4j数据</BaseButton>
         <BaseButton @click="exportJsonConfig">导出JSON配置</BaseButton>
         <input ref="importInput" type="file" style="display:none" @change="importGraphConfig" />
-        <div class="form-popup" v-show="isFormOpen">
+        <div class="form-popup" v-if="isFormOpen">
             <div class="form-container">
                 <div class="options">
                     <b>Animation Type:</b>
@@ -95,6 +96,8 @@
                 <li @click="contextRecoverNode">恢复节点</li>
             </ul>
         </div>
+
+        <BaseButton @click="testFunction">测试函数</BaseButton>
     </div>
 </template>
 
@@ -131,8 +134,8 @@ const { addNode, removeNode, recoverNode } = useContextActions(cy)
 // 引入配置选项
 import { useGraphSettings } from '../hooks/useGraphSettings'
 const settings = useGraphSettings()
-const { isFormOpen,
-    animationType, nodeSeparation,
+const { isFormOpen, animationType,
+    nodeSeparation,
     allowNodesInCircles, markovClusteringApplied,
     maxRatioOfNodesInCircle, idealEdgeLengthCoef, packComponents,
     randomize, fit
@@ -204,7 +207,7 @@ onMounted(() => {
 // 引入JSON配置导入导出 hook
 import { useJSONAction } from '../hooks/useJSONAction'
 import { useDebounceFn } from '@/utils/useDebounceFn'
-const { importGraphConfig, importInput, exportGraphConfig } = useJSONAction(cy)
+const { importGraphConfig, importInput, exportGraphConfig, importNeo4jData } = useJSONAction(cy)
 
 const importJsonConfig = useDebounceFn(() => {
     if (!importInput.value) return
@@ -216,6 +219,12 @@ const exportJsonConfig = () => {
     exportGraphConfig()
 }
 
+// 测试函数
+const testFunction = () => {
+    console.log('测试函数被点击');
+    console.log('cy:', toRaw(cy.value));
+    console.log('settings:', toRaw(settings));
+}
 </script>
 
 
@@ -253,7 +262,7 @@ const exportJsonConfig = () => {
     left: 5px;
     width: 450px;
     border: 3px solid #f1f1f1;
-    z-index: 999;
+    z-index: 1000;
 }
 
 b {

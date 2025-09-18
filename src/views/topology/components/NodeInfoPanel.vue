@@ -26,7 +26,7 @@
                     <el-descriptions-item label="已使用">{{ nodeData.node.memory.used }}</el-descriptions-item>
                     <el-descriptions-item label="使用率">
                         <div class="usage-container">
-                            <el-progress :percentage="nodeData.node.memory.utilization" stroke-width="6"
+                            <el-progress :percentage="nodeData.node.memory.utilization" :stroke-width="6"
                                 :status="getProgressStatus(nodeData.node.memory.utilization)" />
                             <span class="usage-value">{{ nodeData.node.memory.utilization }}%</span>
                         </div>
@@ -44,7 +44,7 @@
                     <el-table-column label="使用率">
                         <template #default="scope">
                             <div class="usage-cell">
-                                <el-progress :percentage="scope.row.utilization" stroke-width="4"
+                                <el-progress :percentage="scope.row.utilization" :stroke-width="4"
                                     :status="getProgressStatus(scope.row.utilization)" />
                                 <span class="usage-text">{{ scope.row.utilization }}%</span>
                             </div>
@@ -65,7 +65,7 @@
                     <el-table-column label="使用率">
                         <template #default="scope">
                             <div class="usage-cell">
-                                <el-progress :percentage="scope.row.utilization" stroke-width="4"
+                                <el-progress :percentage="scope.row.utilization" :stroke-width="4"
                                     :status="getProgressStatus(scope.row.utilization)" />
                                 <span class="usage-text">{{ scope.row.utilization }}%</span>
                             </div>
@@ -124,7 +124,7 @@ const isCollapsed = ref(false)
 const formatTimestamp = (timestamp: string) => new Date(timestamp).toLocaleString()
 
 const getProgressStatus = (percentage: number) => {
-    if (percentage > 80) return 'error'
+    if (percentage > 80) return 'exception'
     if (percentage > 60) return 'warning'
     return 'success'
 }
