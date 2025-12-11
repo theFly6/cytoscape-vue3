@@ -9,6 +9,7 @@
 
         <!-- 显示图例Legend以及节点信息NodeInfoPanel -->
         <div class="right-side">
+            <NodeSelection />
             <Legend />
             <NodeInfoPanel />
         </div>
@@ -20,6 +21,7 @@ import ControlPanel from './components/ControlPanel.vue'
 import TopologyGraph from './components/TopologyGraph.vue'
 import Legend from './components/Legend.vue'
 import NodeInfoPanel from './components/NodeInfoPanel.vue'
+import NodeSelection from './components/NodeSelection.vue';
 </script>
 
 <style scoped>

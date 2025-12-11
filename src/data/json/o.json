@@ -1,0 +1,546 @@
+{
+  "elements": [
+    {
+      "group": "nodes",
+      "data": {
+        "id": "192.168.1.1",
+        "name": "NvidaA",
+        "depth": 1,
+        "x": "-30",
+        "y": "30",
+        "width": "30",
+        "height": "30",
+        "color": "232 243 245",
+        "borderColor": "204 204 204",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "expandcollapseRenderedStartX": 283.8661510407769,
+        "expandcollapseRenderedStartY": 79.69163618975944,
+        "expandcollapseRenderedCueSize": 12
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "192.168.1.1-qpi",
+        "name": "QPI",
+        "depth": 2,
+        "x": "-60",
+        "y": "182",
+        "width": "30",
+        "height": "30",
+        "color": "77 16 29",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "192.168.1.1"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "192.168.1.1-numa0",
+        "name": "NUMA0",
+        "depth": 2,
+        "x": "-30",
+        "y": "-162",
+        "width": "30",
+        "height": "30",
+        "color": "183 205 255",
+        "borderColor": "204 204 204",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "192.168.1.1"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "192.168.1.1-numa1",
+        "name": "NUMA1",
+        "depth": 2,
+        "x": "-32",
+        "y": "367",
+        "width": "30",
+        "height": "30",
+        "color": "186 192 10",
+        "borderColor": "204 204 204",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "192.168.1.1"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "192.168.1.1-nic2",
+        "name": "MLX5_4",
+        "depth": 3,
+        "x": "-276",
+        "y": "448",
+        "width": "30",
+        "height": "30",
+        "color": "33 132 125",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "192.168.1.1-numa1"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "192.168.1.1-nic3",
+        "name": "MLX5_5",
+        "depth": 3,
+        "x": "213",
+        "y": "446",
+        "width": "30",
+        "height": "30",
+        "color": "64 23 231",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "192.168.1.1-numa1"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "192.168.1.1-cpu1",
+        "name": "CPU1",
+        "depth": 3,
+        "x": "-60",
+        "y": "302",
+        "width": "30",
+        "height": "30",
+        "color": "222 112 171",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "192.168.1.1-numa1"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "192.168.1.1-gpu0",
+        "name": "GPU0",
+        "depth": 3,
+        "x": "-158",
+        "y": "-351",
+        "width": "30",
+        "height": "30",
+        "color": "166 27 63",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "192.168.1.1-numa0"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "192.168.1.1-pcie0",
+        "name": "PCISW0",
+        "depth": 3,
+        "x": "-276",
+        "y": "-157",
+        "width": "30",
+        "height": "30",
+        "color": "128 208 109",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "192.168.1.1-numa0"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "192.168.1.1-gpu1",
+        "name": "GPU1",
+        "depth": 3,
+        "x": "-156",
+        "y": "-286",
+        "width": "30",
+        "height": "30",
+        "color": "73 207 173",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "192.168.1.1-numa0"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "192.168.1.1-gpu2",
+        "name": "GPU2",
+        "depth": 3,
+        "x": "-154",
+        "y": "-225",
+        "width": "30",
+        "height": "30",
+        "color": "98 124 169",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "192.168.1.1-numa0"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "192.168.1.1-gpu3",
+        "name": "GPU3",
+        "depth": 3,
+        "x": "-156",
+        "y": "-176",
+        "width": "30",
+        "height": "30",
+        "color": "70 4 108",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "192.168.1.1-numa0"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "192.168.1.1-gpu4",
+        "name": "GPU4",
+        "depth": 3,
+        "x": "21",
+        "y": "-354",
+        "width": "30",
+        "height": "30",
+        "color": "172 14 68",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "192.168.1.1-numa0"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "192.168.1.1-pcie1",
+        "name": "PCISW1",
+        "depth": 3,
+        "x": "101",
+        "y": "-160",
+        "width": "30",
+        "height": "30",
+        "color": "145 171 251",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "192.168.1.1-numa0"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "192.168.1.1-gpu5",
+        "name": "GPU5",
+        "depth": 3,
+        "x": "6",
+        "y": "-295",
+        "width": "30",
+        "height": "30",
+        "color": "131 165 118",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "192.168.1.1-numa0"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "192.168.1.1-gpu6",
+        "name": "GPU6",
+        "depth": 3,
+        "x": "9",
+        "y": "-235",
+        "width": "30",
+        "height": "30",
+        "color": "83 96 43",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "192.168.1.1-numa0"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "192.168.1.1-gpu7",
+        "name": "GPU7",
+        "depth": 3,
+        "x": "15",
+        "y": "-181",
+        "width": "30",
+        "height": "30",
+        "color": "29 11 158",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "192.168.1.1-numa0"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "192.168.1.1-cpu0",
+        "name": "CPU0",
+        "depth": 3,
+        "x": "-61",
+        "y": "-63",
+        "width": "30",
+        "height": "30",
+        "color": "182 9 46",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "192.168.1.1-numa0"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "192.168.1.1-nic1",
+        "name": "MLX5_3",
+        "depth": 3,
+        "x": "216",
+        "y": "41",
+        "width": "30",
+        "height": "30",
+        "color": "85 129 88",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "192.168.1.1-numa0"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "id": "192.168.1.1-nic0",
+        "name": "MLX5_2",
+        "depth": 3,
+        "x": "-271",
+        "y": "47",
+        "width": "30",
+        "height": "30",
+        "color": "28 60 208",
+        "borderColor": "0 0 0",
+        "textColor": "0 0 0",
+        "shape": "Ellipse",
+        "text": "",
+        "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
+        "parent": "192.168.1.1-numa0"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e0",
+        "source": "192.168.1.1-nic2",
+        "target": "192.168.1.1-nic3"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e1",
+        "source": "192.168.1.1-qpi",
+        "target": "192.168.1.1-cpu1"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e2",
+        "source": "192.168.1.1-gpu0",
+        "target": "192.168.1.1-pcie0"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e3",
+        "source": "192.168.1.1-gpu1",
+        "target": "192.168.1.1-pcie0"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e4",
+        "source": "192.168.1.1-gpu2",
+        "target": "192.168.1.1-pcie0"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e5",
+        "source": "192.168.1.1-gpu3",
+        "target": "192.168.1.1-pcie0"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e6",
+        "source": "192.168.1.1-gpu4",
+        "target": "192.168.1.1-pcie1"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e7",
+        "source": "192.168.1.1-gpu5",
+        "target": "192.168.1.1-pcie1"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e8",
+        "source": "192.168.1.1-gpu6",
+        "target": "192.168.1.1-pcie1"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e9",
+        "source": "192.168.1.1-gpu7",
+        "target": "192.168.1.1-pcie1"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e10",
+        "source": "192.168.1.1-cpu0",
+        "target": "192.168.1.1-nic1"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e11",
+        "source": "192.168.1.1-cpu0",
+        "target": "192.168.1.1-qpi"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e12",
+        "source": "192.168.1.1-cpu0",
+        "target": "192.168.1.1-pcie0"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e13",
+        "source": "192.168.1.1-cpu0",
+        "target": "192.168.1.1-pcie1"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e14",
+        "source": "192.168.1.1-cpu0",
+        "target": "192.168.1.1-nic0"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e15",
+        "source": "192.168.1.1-cpu1",
+        "target": "192.168.1.1-nic2"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e16",
+        "source": "192.168.1.1-cpu1",
+        "target": "192.168.1.1-nic3"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "id": "e17",
+        "source": "192.168.1.1-nic0",
+        "target": "192.168.1.1-nic1"
+      }
+    }
+  ],
+  "style": [
+    {
+      "selector": "node",
+      "style": {
+        "line-color": "fn",
+        "label": "data(name)",
+        "width": "data(width)",
+        "height": "data(height)",
+        "content": "data(id)"
+      }
+    },
+    {
+      "selector": "edge",
+      "style": {}
+    }
+  ]
+}

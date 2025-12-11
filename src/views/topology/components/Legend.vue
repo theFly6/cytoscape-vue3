@@ -1,6 +1,6 @@
 <!-- Legend.vue -->
 <template>
-    <div class="legend">
+    <div class="legend" v-show="0">
         <div class="legend-title">Node Colors</div>
         <div class="legend-scale">
             <ul class="legend-labels">
@@ -26,6 +26,7 @@ import { clusterColorMap } from '../hooks/useCyStyle';
 <style scoped>
 .legend {
     margin-left: 10px;
+    width: 200px;
 }
 
 .legend .legend-title {

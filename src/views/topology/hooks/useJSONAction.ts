@@ -106,7 +106,7 @@ export function useJSONAction(cy: Ref<cytoscape.Core | undefined>) {
                                 y: parseFloat(ele.data.y)
                             }
                             : undefined
-                    console.log('添加元素:', ele, position, ele.data.x, typeof ele.data.x);
+                    // console.log('添加元素:', ele, position, ele.data.x, typeof ele.data.x);
                     cy.value?.add({
                         group: ele.group,
                         data: ele.data,
@@ -125,7 +125,7 @@ export function useJSONAction(cy: Ref<cytoscape.Core | undefined>) {
                         'background-color': nodeBackgroundColor,
                         'shape': nodeShape,
                         'line-color': edgeLineColor,
-                        content: rule.style?.content || 'data(id)',
+                        label: rule.style?.label || 'data(id)',
                         width: rule.style?.width || 'data(width)',
                         height: rule.style?.height || 'data(height)',
                     } : rule.style
