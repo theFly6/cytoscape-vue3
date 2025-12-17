@@ -34,7 +34,7 @@
         "color": "77 16 29",
         "borderColor": "0 0 0",
         "textColor": "0 0 0",
-        "shape": "Ellipse",
+        "shape": "star",
         "text": "",
         "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
         "parent": "192.168.1.1"
@@ -72,7 +72,7 @@
         "color": "186 192 10",
         "borderColor": "204 204 204",
         "textColor": "0 0 0",
-        "shape": "Ellipse",
+        "shape": "hexagon",
         "text": "",
         "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
         "parent": "192.168.1.1"
@@ -129,7 +129,7 @@
         "color": "222 112 171",
         "borderColor": "0 0 0",
         "textColor": "0 0 0",
-        "shape": "Ellipse",
+        "shape": "rectangle",
         "text": "",
         "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
         "parent": "192.168.1.1-numa1"
@@ -148,7 +148,7 @@
         "color": "166 27 63",
         "borderColor": "0 0 0",
         "textColor": "0 0 0",
-        "shape": "Ellipse",
+        "shape": "circle",
         "text": "",
         "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
         "parent": "192.168.1.1-numa0"
@@ -167,7 +167,7 @@
         "color": "128 208 109",
         "borderColor": "0 0 0",
         "textColor": "0 0 0",
-        "shape": "Ellipse",
+        "shape": "diamond",
         "text": "",
         "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
         "parent": "192.168.1.1-numa0"
@@ -357,7 +357,7 @@
         "color": "85 129 88",
         "borderColor": "0 0 0",
         "textColor": "0 0 0",
-        "shape": "Ellipse",
+        "shape": "triangle",
         "text": "",
         "textFont": "1|Arial|8|0|WINDOWS|1|-11|0|0|0|0|0|0|0|1|0|0|0|0|Arial",
         "parent": "192.168.1.1-numa0"

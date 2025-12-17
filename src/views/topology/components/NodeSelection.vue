@@ -43,19 +43,22 @@ const nodes = ref<{ value: string; label: string }[]>([])
 // 5s的定时器，定时刷新节点列表
 const timer = ref()
 
-onMounted(async () => {
-    // 从后端获取数据
-    timer.value = setInterval(async () => {
-        // const curTime = new Date().toLocaleTimeString()
-        // console.log('定时器触发', curTime)
-        const res = await axios.get('http://localhost:3000/topology/info/nodes')
-        const data = res.data
+const getNodes = async () => {
+    // const curTime = new Date().toLocaleTimeString()
+    // console.log('定时器触发', curTime)
+    const res = await axios.get('http://localhost:3000/topology/info/nodes')
+    const data = res.data
 
-        nodes.value = data.nodes.map((node: { hostname: string; ip: string }) => ({
-            value: node.ip,
-            label: node.hostname,
-        }))
-    }, 5000)
+    nodes.value = data.nodes.map((node: { hostname: string; ip: string }) => ({
+        value: node.ip,
+        label: node.hostname,
+    }))
+}
+
+onMounted(async () => {
+    getNodes()
+    // 定期从后端获取数据
+    // timer.value = setInterval(getNodes, 5000)
 })
 
 // 组件销毁时清除定时器
