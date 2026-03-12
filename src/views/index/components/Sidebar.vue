@@ -63,6 +63,7 @@ const onSelectChange = (e: Event) => {
     const val = (e.target as HTMLSelectElement).value;
     currentNodeId.value = val;
     emit('clearDetails');
+    console.log("Change", currentNodeId.value)
 };
 
 onMounted(async () => {
