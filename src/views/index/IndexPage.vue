@@ -93,6 +93,7 @@ watch(currentNodeId, async () => {
                 const acceleratiorType = (label: string) => {
                     console.log('判断加速卡类型的ID:', label);
                     if (label.includes("mccx")) return "摩尔线程";
+                    if (label.includes("mx")) return "MetaX";
                     return "Unknown";
                 };
                 el.data.properties = {

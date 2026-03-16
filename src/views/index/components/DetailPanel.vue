@@ -31,6 +31,15 @@
                         <span>📈 查看节点详情</span>
                     </button>
                 </div>
+                <div v-if="fetchedData" class="json-viewer-container">
+                    <div class="json-header">
+                        <span class="json-title">📋 节点原始数据</span>
+                        <button @click="fetchedData = null" class="close-link">清除结果</button>
+                    </div>
+                    <div class="json-scroll-area">
+                        <pre class="json-content">{{ JSON.stringify(fetchedData, null, 2) }}</pre>
+                    </div>
+                </div>
             </div>
 
             <div v-else class="empty-state">
@@ -40,16 +49,23 @@
                     <span>在拓扑图中点击查看详细参数</span>
                 </div>
             </div>
+
+
         </Transition>
+
     </div>
 </template>
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import type { DetailInfo } from '../types/topology';
 
 const props = defineProps<{
     info: DetailInfo | null;
 }>();
+
+// 新增：用于存储接口返回的原始 JSON 数据
+const fetchedData = ref<any>(null);
+const isLoading = ref(false);
 
 // 属性名翻译字典
 const labelMap: Record<string, string> = {
@@ -82,8 +98,29 @@ const formattedProperties = computed(() => {
 
 const renderLabel = (key: string) => labelMap[key] || key;
 
-const viewMonitor = (id: string) => {
-    console.log(`跳转到设备 ${id} 的 Grafana 面板`);
+// 修改后的查看详情函数
+const viewMonitor = async (id: string) => {
+    // 假设 ip 存储在 info.properties.ip 中
+    console.log('查看详情的节点ID:', id);
+    const ip = props.info?.properties?.ip;
+    if (!ip) {
+        console.error("未找到有效的 IP 地址");
+        return;
+    }
+
+    isLoading.value = true;
+    try {
+        const response = await fetch(`http://localhost:3000/topology/info/node/detail?ip=${ip}`);
+        if (!response.ok) throw new Error('网络响应异常');
+        const json = await response.json();
+        fetchedData.value = json; // 将获取的数据存入响应式变量
+    } catch (error) {
+        console.error("获取数据失败:", error);
+        fetchedData.value = { error: "无法获取节点详情数据" };
+    } finally {
+        isLoading.value = false;
+    }
+    console.log('接口返回的原始数据:', fetchedData.value);
 };
 </script>
 
@@ -118,9 +155,10 @@ const viewMonitor = (id: string) => {
     border-radius: 16px;
     border: 1px solid #f1f5f9;
     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
-    overflow: hidden;
+    /* overflow: hidden; */
     display: flex;
     flex-direction: column;
+    margin-bottom: 20px;
 }
 
 /* 卡片页眉横幅 */
@@ -264,5 +302,82 @@ const viewMonitor = (id: string) => {
 .slide-fade-enter-from {
     opacity: 0;
     transform: translateX(20px);
+}
+
+.json-viewer-container {
+    /* margin: 5px; */
+    margin-top: 5px;
+    padding: 12px;
+    padding-bottom: 0;
+    background: #f8fafc;
+    /* 与卡片 Banner 一致的浅灰色 */
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+}
+
+.json-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px dashed #e2e8f0;
+}
+
+.json-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: #475569;
+}
+
+.close-link {
+    background: none;
+    border: none;
+    color: #94a3b8;
+    font-size: 11px;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.close-link:hover {
+    color: #ef4444;
+    text-decoration: underline;
+}
+
+/* 滚动区域：自定义滚动条样式 */
+.json-scroll-area {
+    max-height: 250px;
+    overflow: auto;
+    /* 针对 Chrome/Safari 的滚动条美化 */
+}
+
+.json-scroll-area::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+
+.json-scroll-area::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.json-scroll-area::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+
+.json-scroll-area::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* JSON 内容：调整代码高亮颜色为更柔和的深色系 */
+.json-content {
+    margin: 0;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 12px;
+    line-height: 1.5;
+    color: #334155;
+    /* 深灰文字 */
+    white-space: pre-wrap;
+    word-break: break-all;
 }
 </style>
