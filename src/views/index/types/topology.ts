@@ -18,7 +18,9 @@ export interface TopologyProperty {
 export interface DetailInfo {
     id: string;
     label: string;
+    ip: string;
     type: string;
+    port: number
     properties: TopologyProperty;
 }
 

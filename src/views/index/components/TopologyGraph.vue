@@ -7,6 +7,7 @@ import { onMounted, watch, ref, onUnmounted, nextTick } from 'vue';
 import cytoscape from 'cytoscape';
 import { typeData } from '@/data/index-data';
 import { useTopologyStore } from '@/stores/useIndexStore';
+import { useDebounceFn } from '@/utils/useDebounceFn'
 // 使用共享 store
 const { cy } = useTopologyStore();
 
@@ -95,8 +96,12 @@ const initCy = async (isCose = false) => {
     }, 500);
 };
 
+const debouncedInitCy = useDebounceFn(() => {
+    initCy()
+}, 1000)
 // 监听数据和 ID 变化
-watch(() => [props.elements, props.currentNodeId], () => {
+watch(() => [props.elements], () => {
+    // debouncedInitCy(); // 执行防抖函数
     initCy()
 }, { deep: false });
 watch(() => props.triggerReset, () => {

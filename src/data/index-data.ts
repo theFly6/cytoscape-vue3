@@ -154,6 +154,7 @@ export const LegendData = {
     "GPU": { label: "GPU", color: '#36A8A6', shape: 'round-rectangle', text: "■" },
     "PCIe": { label: "PCIe", color: '#ffc107', shape: 'diamond', text: "◆" },
     "NIC": { label: "NIC", color: '#d6f13b', shape: 'circle', text: "●" },
+    "DEFAULT": { label: "DEFAULT", color: '#e68a8a', shape: 'round-rectangle', text: "■" }
 }
 
 export const typeData = [
@@ -194,6 +195,10 @@ export const typeData = [
     {
         selector: 'node[type="NIC"]',
         style: { 'background-color': LegendData.NIC.color, 'shape': LegendData.NIC.shape, "width": 50, "height": 50 }
+    },
+    {
+        selector: 'node[type="DEFAULT"]',
+        style: { 'background-color': LegendData.DEFAULT.color, 'shape': LegendData.DEFAULT.shape, 'width': 50, 'height': 50 }
     },
     {
         selector: 'edge',

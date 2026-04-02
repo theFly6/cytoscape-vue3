@@ -17,7 +17,7 @@ const cy = ref();
 export function useTopologyStore() {
 
     const fetchNodes = async () => {
-        if (nodes.value.length > initialNodes.length) return; // 避免重复加载
+        // if (nodes.value.length > initialNodes.length) return; // 避免重复加载
 
         isLoading.value = true;
         try {
@@ -25,6 +25,7 @@ export function useTopologyStore() {
             const remoteNodes = res.data['nodes'].map((node: any) => ({
                 value: node.ip,
                 ip: node.ip,
+                port: node.port,
                 hostname: node.hostname,
                 label: `${node.hostname} [${node.ip}]`
             }));
@@ -37,11 +38,31 @@ export function useTopologyStore() {
         }
     };
 
+    // const addNode = async (newNode: any) => {
+    //     const res = await axios.post('/info/nodes/add', newNode);
+    //     nodes.value = res.data.nodes; // 重新同步前端列表
+    // };
+
+    // const deleteNode = async (ip: any) => {
+    //     const res = await axios.post('/info/nodes/delete', { ip });
+    //     nodes.value = res.data.nodes;
+    // };
+
+    const updateNodes = async (newNodes: any) => {
+        // console.log('newNodes', newNodes.slice(2));
+        // return
+        await axios.post('http://localhost:3000/topology/info/nodes/update', { nodes: newNodes.slice(2) });
+        fetchNodes(); // 重新加载节点列表
+    };
+
     return {
         nodes,
         currentNodeId,
         isLoading,
         fetchNodes,
-        cy
+        cy,
+        // addNode,
+        // deleteNode,
+        updateNodes
     };
 }
