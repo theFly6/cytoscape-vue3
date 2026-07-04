@@ -285,13 +285,86 @@ export const typeData = [
         }
     },
     {
+        selector: 'node[type="O_HOST"]',
+        style: {
+            'shape': 'round-rectangle',
+            'width': 120,
+            'height': 60,
+            'background-color': '#ffffff', // 纯白底色
+            'border-width': 2,
+            'border-color': '#3b82f6',     // 更现代的蓝色
+            'border-opacity': 0.8,
+
+            // 节点文字优化
+            'label': 'data(fullLabel)',
+            'text-wrap': 'wrap',
+            'text-max-width': 100,
+            'text-valign': 'center',
+            'text-halign': 'center',
+            'color': '#1e293b',            // 深灰蓝色文字，比纯黑更高级
+            'font-size': '12px',
+            'font-family': 'Inter, system-ui, sans-serif',
+            'line-height': 1.5,
+
+            // 阴影效果 (提升立体感)
+            'shadow-blur': 10,
+            'shadow-color': '#cbd5e1',
+            'shadow-opacity': 0.5,
+            'shadow-offset-x': 0,
+            'shadow-offset-y': 2,
+
+            'transition-property': 'background-color, border-color, width, height',
+            'transition-duration': '0.2s'
+        }
+    },
+    {
         selector: 'edge[type="NET_LINK"]',
         style: {
-            'width': 4,
-            'line-color': '#94a3b8',
-            'target-arrow-shape': 'triangle',
-            'target-arrow-color': '#94a3b8',
-            'curve-style': 'bezier'
+            'width': 3,                   // 线条减细更显精致
+            'line-color': '#9eb3cd',      // 默认状态用浅灰色，突出节点
+            'curve-style': 'bezier',      // 贝塞尔曲线，避免直线交织太死板
+            'opacity': 0.6,
+            'overlay-opacity': 0,         // 去除点击时的蓝色矩形
+        }
+    },
+    // --- 交互反馈样式 ---
+    {
+        selector: 'node:selected',
+        style: {
+            'border-color': '#2563eb',
+            'border-width': 3,
+            'background-color': '#eff6ff'
+        }
+    },
+    {
+        selector: 'node.highlight', // 当鼠标悬停在邻居节点时
+        style: {
+            'border-color': '#f97316',
+            'border-width': 3
+        }
+    },
+    {
+        selector: 'edge.highlight', // 悬停时高亮相关连接
+        style: {
+            'width': 3,
+            'line-color': '#f97316',    // 橙色高亮
+            'opacity': 1,
+            'z-index': 999
+        }
+    },
+    {
+        selector: 'edge:selected',
+        style: {
+            'width': 6,               // 显著加粗
+            'line-color': '#ef4444',  // 使用对比鲜明的颜色（如红色或亮黄色）
+            'opacity': 1,             // 确保完全不透明
+            'z-index': 9999,          // 确保选中的线在所有线的最上层
+
+            // 进阶视觉效果
+            'line-style': 'solid',    // 确保不是虚线
+            'target-arrow-color': '#ef4444',
+            'source-arrow-color': '#ef4444',
+
         }
     }
 ]

@@ -89,6 +89,7 @@ const initCy = async (isCose = false) => {
     // 其他原有事件处理...
     cy.value.on('tap', 'node, edge', (evt: any) => emit('select-element', evt.target.data()));
     cy.value.on('dbltap', 'node[type="HOST"]', (evt: any) => emit('drill-down', evt.target.id()));
+    cy.value.on('dbltap', 'node[type="O_HOST"]', (evt: any) => emit('drill-down', evt.target.id()));
 
     // 初始化后自动保存一次位置
     setTimeout(() => {
