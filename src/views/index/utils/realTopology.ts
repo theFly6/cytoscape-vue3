@@ -15,7 +15,11 @@ export type CytoscapeElement = {
 function inferAcceleratorType(hostname: string, label: string): string {
     const text = `${hostname} ${label}`.toLowerCase();
     if (text.includes('mccx')) return '摩尔线程';
-    if (text.includes('mx')) return 'MetaX';
+    // 天津/MetaX HPCC 集群（ht-smi Mars X203）
+    if (text.includes('mars') || text.includes('metax') || text.includes('hpcc')) {
+        return 'MetaX Mars X203';
+    }
+    if (text.includes('mx') || text.includes('tj')) return 'MetaX Mars X203';
     if (text.includes('node')) return 'NVIDIA';
     return 'Unknown';
 }
