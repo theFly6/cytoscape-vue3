@@ -96,6 +96,7 @@ import { computed, ref, watch } from 'vue';
 import type { DetailInfo } from '../types/topology';
 import { ElMessage } from 'element-plus';
 import { useTopologyStore } from '@/stores/useIndexStore';
+import { apiUrl } from '@/api/client';
 
 const { currentNodeId } = useTopologyStore();
 
@@ -706,7 +707,7 @@ const viewMonitor = async () => {
     isLoading.value = true;
     fetchedData.value = { loading: `正在获取节点${ip}的拓扑感知数据，这个过程可能需要40s左右，请耐心等待` };
     try {
-        const response = await fetch(`http://localhost:3000/topology/info/node/detail?ip=${ip}&port=${port}`);
+        const response = await fetch(apiUrl(`/topology/info/node/detail?ip=${ip}&port=${port}`));
         if (!response.ok) throw new Error('网络响应异常');
         const json = await response.json();
         // fetchedData.value = json; // 将获取的数据存入响应式变量
@@ -785,11 +786,11 @@ const viewBetweenNodes = async () => {
 
             // --- 2. 获取双向时延 ---
             // A -> B
-            const latResAB = await fetch(`http://localhost:3000/network/latency?source=${A}&targets=${B}`);
+            const latResAB = await fetch(apiUrl(`/network/latency?source=${A}&targets=${B}`));
             const latJsonAB = await latResAB.json();
 
             // B -> A
-            const latResBA = await fetch(`http://localhost:3000/network/latency?source=${B}&targets=${A}`);
+            const latResBA = await fetch(apiUrl(`/network/latency?source=${B}&targets=${A}`));
             const latJsonBA = await latResBA.json();
 
             // 先更新一次 UI，让用户看到时延数据，同时显示带宽加载中
@@ -802,11 +803,11 @@ const viewBetweenNodes = async () => {
 
             // --- 3. 获取双向带宽 (顺序执行避免竞争) ---
             // A -> B
-            const bwResAB = await fetch(`http://localhost:3000/network/bandwidth?source=${A}&dests=${B}`);
+            const bwResAB = await fetch(apiUrl(`/network/bandwidth?source=${A}&dests=${B}`));
             const bwJsonAB = await bwResAB.json();
 
             // B -> A
-            const bwResBA = await fetch(`http://localhost:3000/network/bandwidth?source=${B}&dests=${A}`);
+            const bwResBA = await fetch(apiUrl(`/network/bandwidth?source=${B}&dests=${A}`));
             const bwJsonBA = await bwResBA.json();
 
             finalData = {
@@ -821,14 +822,14 @@ const viewBetweenNodes = async () => {
             };
         } else {
             // --- O_HOST (一对多) 逻辑保持不变 ---
-            const latRes = await fetch(`http://localhost:3000/network/latency?source=${sourceIp}&targets=${targetIps}`);
+            const latRes = await fetch(apiUrl(`/network/latency?source=${sourceIp}&targets=${targetIps}`));
             const latJson = await latRes.json();
 
             if (latJson.success) {
                 fetchedData.value = { latData: latJson, bandwidthLoading: true };
             }
 
-            const bwRes = await fetch(`http://localhost:3000/network/bandwidth?source=${sourceIp}&dests=${targetIps}`);
+            const bwRes = await fetch(apiUrl(`/network/bandwidth?source=${sourceIp}&dests=${targetIps}`));
             const bwJson = await bwRes.json();
 
             finalData = {

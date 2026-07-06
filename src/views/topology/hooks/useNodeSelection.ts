@@ -1,6 +1,6 @@
 // ./hooks/useJSONAction.ts
 import { ref, type Ref } from 'vue'
-import axios from 'axios'
+import { api } from '@/api/client'
 
 // 引入 cy 实例 hook
 import { useCyInstance } from '../hooks/useCyInstance'
@@ -21,7 +21,7 @@ export function useNodeSelection(cy: Ref<cytoscape.Core | undefined>) {
     const handleSelect = useDebounceFn(async (ip, hostname) => {
         try {
             console.log('即将导入 Neo4j 数据')
-            const res = await axios.get(`http://localhost:3000/topology/cytoscape?ip=${ip}&hostname=${hostname}`)
+            const res = await api.get('/topology/cytoscape', { params: { ip, hostname } })
             const data = res.data
             console.log('导入 Neo4j 数据:', data)
 
@@ -77,7 +77,7 @@ export function useNodeSelection(cy: Ref<cytoscape.Core | undefined>) {
         try {
             console.log('即将获取目标ip拓扑配置', ip, hostname)
             // 根据ip和hostname获取目标ip的拓扑信息并传入neo4j中
-            await axios.get('http://localhost:3000/topology/info/node?ip=' + ip + '&hostname=' + hostname)
+            await api.get('/topology/info/node', { params: { ip, hostname } })
             // 从neo4j获取拓扑结构并绘图
             handleSelect(ip, hostname)
         }

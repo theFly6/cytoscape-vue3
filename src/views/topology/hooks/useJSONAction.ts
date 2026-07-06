@@ -1,6 +1,6 @@
 // ./hooks/useJSONAction.ts
 import { ref, type Ref } from 'vue'
-import axios from 'axios'
+import { api } from '@/api/client'
 
 // 引入 cy 实例 hook
 import { useCyInstance } from '../hooks/useCyInstance'
@@ -25,7 +25,7 @@ export function useJSONAction(cy: Ref<cytoscape.Core | undefined>) {
 
     const importNeo4jData = useDebounceFn(async () => {
         try {
-            const res = await axios.get('http://localhost:3000/topology/cytoscape')
+            const res = await api.get('/topology/cytoscape')
             const data = res.data
 
             // 清空现有图

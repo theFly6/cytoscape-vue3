@@ -1,6 +1,6 @@
 // ./hooks/useNodeInfo.ts
 import { ref, type Ref } from 'vue'
-import axios from 'axios'
+import { api } from '@/api/client'
 
 // 全局存储当前节点信息页显示的节点ID
 export const nodeInfoID: Ref<string | null> = ref(null)
@@ -20,7 +20,7 @@ export function useNodeInfo() {
         loading.value = true
         error.value = null
         try {
-            const res = await axios.get(`http://localhost:3000/topology/info/${nodeID}`, {
+            const res = await api.get(`/topology/info/${nodeID}`, {
                 timeout: 1000
             })
             nodeData.value = res.data

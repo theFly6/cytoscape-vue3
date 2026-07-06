@@ -29,7 +29,7 @@
 
 <script lang="ts" setup>
 import { onBeforeUnmount, onMounted, ref } from 'vue'
-import axios from 'axios'
+import { api } from '@/api/client'
 
 // 引入 cy 实例 hook
 import { useCyInstance } from '../hooks/useCyInstance'
@@ -46,7 +46,7 @@ const timer = ref()
 const getNodes = async () => {
     // const curTime = new Date().toLocaleTimeString()
     // console.log('定时器触发', curTime)
-    const res = await axios.get('http://localhost:3000/topology/info/nodes')
+    const res = await api.get('/topology/info/nodes')
     const data = res.data
 
     nodes.value = data.nodes.map((node: { hostname: string; ip: string }) => ({

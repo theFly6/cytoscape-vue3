@@ -16,7 +16,7 @@ import TopologyGraph from './components/TopologyGraph.vue';
 import DetailPanel from './components/DetailPanel.vue';
 import { topologyData as rawTopologyData } from '@/data/index-data'; // 移出的静态模拟数据
 import { useTopologyStore } from '@/stores/useIndexStore';
-import axios from 'axios';
+import { api } from '@/api/client';
 import { edgeLineColor, nodeBackgroundColor, nodeShape } from '@/data/styleFunctions';
 import { ElMessage } from 'element-plus';
 // 从 store 获取状态
@@ -80,12 +80,12 @@ watch(currentNodeId, async () => {
         const { ip: subnet, port } = curNode as any;
         currentElements.value = []
         try {
-            let nodes = await axios.get('http://localhost:3000/topology/info/nodes');
+            let nodes = await api.get('/topology/info/nodes');
             nodes = nodes.data.nodes.map((node: { hostname: string; ip: string }) => ({
                 value: node.ip,
                 label: node.hostname,
             }))
-            const result = await axios.get('http://localhost:3000/network/nodes?subnet=' + subnet + '&port=' + port);
+            const result = await api.get('/network/nodes', { params: { subnet, port } });
             const { ssh_ready_nodes } = result.data;
             allSshNodes.value = ssh_ready_nodes;
             if (ssh_ready_nodes.length === 0) {
@@ -149,18 +149,17 @@ watch(currentNodeId, async () => {
         const curNode = nodes.value.find(n => n.value === currentNodeId.value) || [];
         const { ip, hostname, port } = curNode as any;
         console.log('curNode', ip, hostname);
-        // const res = await axios.get(`http://localhost:3000/topology/cytoscape?ip=${ip}&hostname=${hostname}`)
         // 将指定节点的拓扑数据存放到Neo4j中
         currentElements.value = []
 
         try {
-            await axios.get('http://localhost:3000/topology/info/node?ip=' + ip + '&hostname=' + hostname + '&port=' + port)
+            await api.get('/topology/info/node', { params: { ip, hostname, port } })
         } catch (error) {
             ElMessage.error(`获取节点拓扑信息失败，请检查节点数据信息与状态`);
             return;
         }
         // 然后从Neo4j中获取该节点的拓扑数据
-        const neo4j_data = await axios.get(`http://localhost:3000/topology/cytoscape?ip=${ip}&hostname=${hostname}`)
+        const neo4j_data = await api.get('/topology/cytoscape', { params: { ip, hostname } })
         console.log('从后端获取的拓扑数据:', neo4j_data.data.elements);
         const data = neo4j_data.data;
         data.elements = data.elements.map((el: any) => {

@@ -29,11 +29,12 @@ import { useGraphSettings } from '@/stores/graphSettings'
 const settings = useGraphSettings()
 
 // —— 非响应式变量
-const { elements, clusters, layoutOptions, style, fetchGraphData } = useGraphData('http://localhost:3000/api/graph')
+const { elements, clusters, layoutOptions, style, fetchGraphData } = useGraphData(apiUrl('/api/graph'))
 let arrayOfClusterArrays: string[][]
 let clusterColors: string[] = []
 let legendColors = ref()
 import { useGraphData } from '@/composables/cytoscape/useGraphData'
+import { apiUrl } from '@/api/client'
 import { hexToRgbString, fullColorHex } from '@/data/cytoscape-data'
 
 // 导入配置变量

@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import axios from 'axios';
+import { api } from '@/api/client';
 
 // 定义静态初始选项
 const initialNodes = [
@@ -21,7 +21,7 @@ export function useTopologyStore() {
 
         isLoading.value = true;
         try {
-            const res = await axios.get(`http://localhost:3000/topology/info/nodes`);
+            const res = await api.get('/topology/info/nodes');
             const remoteNodes = res.data['nodes'].map((node: any) => ({
                 value: node.ip,
                 ip: node.ip,
@@ -51,7 +51,7 @@ export function useTopologyStore() {
     const updateNodes = async (newNodes: any) => {
         // console.log('newNodes', newNodes.slice(2));
         // return
-        await axios.post('http://localhost:3000/topology/info/nodes/update', { nodes: newNodes.slice(2) });
+        await api.post('/topology/info/nodes/update', { nodes: newNodes.slice(2) });
         fetchNodes(); // 重新加载节点列表
     };
 
