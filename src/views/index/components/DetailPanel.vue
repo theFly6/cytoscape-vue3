@@ -11,9 +11,10 @@
                     <span class="type-badge">{{ info.type }}</span>
                     <el-select v-if="info.labels && info.labels.length" v-model="selectedLabel"
                         class="node-title-select">
-                        <el-option v-for="item in info.labels" :key="item" :value="info.label.replace('*', item)"
+                        <el-option v-for="item in info.labels" :key="item"
+                            :value="formatLinkGpuOption(info.label, item, (info as any).source)"
                             :disabled="isSameGpu(item)">
-                            {{ info.label.replace('*', item) }}
+                            {{ formatLinkGpuOption(info.label, item, (info as any).source) }}
                         </el-option>
                     </el-select>
 
@@ -47,8 +48,8 @@
                 </div>
 
                 <div v-if="['HOST'].includes(info.type)" class="card-actions">
-                    <button class="primary-action" @click="viewMonitor()">
-                        <span>📈 节点内部拓扑感知</span>
+                    <button class="primary-action" @click="viewMonitor()" :disabled="isLoading">
+                        <span>{{ isLoading ? '⏳ 感知中...' : '📈 节点内部拓扑感知' }}</span>
                     </button>
                 </div>
 
@@ -97,6 +98,15 @@ import type { DetailInfo } from '../types/topology';
 import { ElMessage } from 'element-plus';
 import { useTopologyStore } from '@/stores/useIndexStore';
 import { apiUrl } from '@/api/client';
+import {
+    buildGpuDetail,
+    buildLinkPerception,
+    fetchNodeDetail,
+    formatLinkGpuOption,
+    initialLinkGpuSelection,
+    resolveGpuTargetFilter,
+    resolveNodeEndpoint,
+} from '@/views/index/utils/detailPerception';
 
 const { currentNodeId } = useTopologyStore();
 
@@ -114,6 +124,8 @@ const isLoading = ref(false);
 
 // 新增：选中目标gpu链路标签的响应式变量
 const selectedLabel = ref('');
+const originalData = ref<any>(null);
+const lastInfoIp = ref('');
 
 // 属性名翻译字典
 const labelMap: Record<string, string> = {
@@ -129,10 +141,14 @@ const labelMap: Record<string, string> = {
     role: '节点角色',
 };
 
-watch(selectedLabel, (newVal) => {
-    if (newVal) {
-        console.log('用户选择了：', newVal);
-        // 你可以在这里更新界面、重新获取数据等
+watch(selectedLabel, () => {
+    if (props.info?.type === 'LINK' && originalData.value) {
+        fetchedData.value = buildLinkPerception(
+            props.info as any,
+            originalData.value,
+            props.gpuNum,
+            props.cpuNum,
+        );
     }
 });
 
@@ -143,8 +159,15 @@ const visibleFields = computed(() => {
     const data = fetchedData.value;
     console.log("@@@data", data);
     const items: { label: string; value: string | number; class?: string }[] = [];
-    // 如果是 HOST 类型则直接返回空items
+    // 如果是 HOST 类型：展示加载/就绪状态
     if (props.info?.type === 'HOST') {
+        if (fetchedData.value?.loading) {
+            items.push({ label: '状态', value: String(fetchedData.value.loading), class: 'data-item' });
+        } else if (fetchedData.value?.error) {
+            items.push({ label: '错误', value: String(fetchedData.value.error), class: 'data-item' });
+        } else if (originalData.value) {
+            items.push({ label: '感知状态', value: '数据已就绪，请点击 CPU/GPU/链路查看指标', class: 'data-item' });
+        }
         return items;
     }
     // 如果是 O_HOST 类型
@@ -400,12 +423,7 @@ const visibleFields = computed(() => {
                     const matrix = target[metric][p2pStatus][transType];
 
                     if (Array.isArray(matrix) && Array.isArray(matrix[0])) {
-
-                        const selected = selectedLabel.value || '';
-                        const match = selected.match(/->\s*gpu(\d+)/i);
-                        const targetIdx = match ? parseInt(match[1], 10) : null;
-                        const isAll = selected.includes('gpu*');
-                        // matrix[0] 包含了当前 GPU 到所有 GPU 的结果
+                        const { isAll, targetIdx } = resolveGpuTargetFilter(selectedLabel.value);
                         matrix[0].forEach((val, targetGpuIdx) => {
                             if (!isAll && targetIdx !== null && targetGpuIdx !== targetIdx) {
                                 return;
@@ -446,230 +464,40 @@ watch(
     (newInfo: any) => {
         if (!newInfo || !originalData.value) {
             fetchedData.value = null;
-            selectedLabel.value = newInfo?.label.replace('*', 'gpu*');
-            // originalData.value = null;
+            selectedLabel.value = initialLinkGpuSelection(newInfo ?? {});
             return;
         }
-        else if (lastInfoIp.value && lastInfoIp.value !== props.info?.ip) {
-            console.log("节点切换了，清除之前的原始数据", props.info, lastInfoIp.value);
+        if (lastInfoIp.value && lastInfoIp.value !== (newInfo.ip || newInfo.properties?.ip)) {
             fetchedData.value = null;
-            return
-        }
-        else if (newInfo.type === "GPU") {
-            const temp = handleGPU(newInfo.label, originalData.value);
-            console.log("处理 GPU 详情数据，结果是:", temp);
-            fetchedData.value = { measurement_info: originalData.value.measurement_info, ...temp };
+            originalData.value = null;
             return;
         }
-
-        else if (newInfo.type === "HOST") {
-            // 如果是 HOST 类型节点，且当前
-            console.log("当前节点是 HOST，准备展示原始数据", props.info, lastInfoIp.value);
-            if (lastInfoIp.value !== props.info?.ip) {
+        if (newInfo.type === 'GPU') {
+            fetchedData.value = {
+                measurement_info: originalData.value.measurement_info,
+                ...buildGpuDetail(newInfo.label, originalData.value),
+            };
+            return;
+        }
+        if (newInfo.type === 'HOST') {
+            if (lastInfoIp.value !== (newInfo.ip || newInfo.properties?.ip)) {
                 fetchedData.value = null;
             } else {
                 fetchedData.value = originalData.value;
             }
             return;
         }
-
-        else if (newInfo.type !== "LINK") {
-            // console.log("not link")
+        if (newInfo.type !== 'LINK') {
             fetchedData.value = null;
-            return
+            return;
         }
-        console.log("当前选中的是链路，准备处理链路详情数据", newInfo);
         if (newInfo.labels) {
-            selectedLabel.value = newInfo.label.replace('*', 'gpu*');
+            selectedLabel.value = initialLinkGpuSelection(newInfo);
         }
-        console.log("处理链路详情数据，当前 selectedLabel 是:", selectedLabel, newInfo.label);
-        const source = newInfo.source.toLowerCase();
-        const target = newInfo.target.toLowerCase();
-        let filtered: any = {};
-
-        if (source.includes("gpu")) {
-            // GPU 的 index
-            const gpuIndex = parseInt(source.match(/gpu(\d+)/)![1], 10);
-
-            // GPU 通过 marslink 到 GPU 的带宽与延迟
-            if (target.includes("marslink")) {
-                filtered = {
-                    gpu_to_gpu: extractGpuToGpu(originalData.value.gpu_to_gpu, gpuIndex)
-                };
-            }
-            // GPU 通过 pci 到 Host(CPU) 的带宽与延迟
-            else if (target.includes("pci")) {
-                filtered = {
-                    gpu_to_host: extractGpuToHost(originalData.value.gpu_to_host, gpuIndex)
-                };
-            }
-        } else if (source.includes("cpu")) {
-            // CPU 情况
-            const cpuIndex = parseInt(source.match(/cpu(\d+)/)![1], 10);
-
-            filtered = {
-                cpu_info: originalData.value.cpu_info,
-                // 可扩展：仅保留该 CPU 对应的 NUMA 节点或 cores 信息
-                related_gpu_to_host: extractCpuRelatedGpu(originalData.value.gpu_to_host, cpuIndex, props.gpuNum, props.cpuNum),
-            };
-        } else {
-            // 默认显示原始数据
-            filtered = { ...originalData.value };
-        }
-
-        fetchedData.value = { measurement_info: originalData.value.measurement_info, ...filtered };
+        fetchedData.value = buildLinkPerception(newInfo, originalData.value, props.gpuNum, props.cpuNum);
     },
-    { deep: true }
+    { deep: true },
 );
-
-/**
- * 处理 GPU 类型的详细数据提取
-*/
-const handleGPU = (label: string, originalData: any) => {
-    if (!originalData || !originalData.gpu_metadata) {
-        console.error("未找到 gpu_metadata 数据源");
-        return { error: "硬件元数据缺失" };
-    }
-
-    try {
-        // 1. 提取索引数字 (例如 "GPU0" -> 0)
-        const match = label.match(/gpu(\d+)/i);
-        if (!match) {
-            return { error: `无法识别的 GPU 标识: ${label}` };
-        }
-
-        const index = parseInt(match[1], 10);
-        const metadataArray = originalData.gpu_metadata;
-
-        // 2. 安全性校验：检查数组越界
-        if (!Array.isArray(metadataArray) || index >= metadataArray.length) {
-            return { error: `节点 ${label} 超出硬件检测范围` };
-        }
-
-        const targetGpu = metadataArray[index];
-
-        // 3. 返回过滤后的结构化数据
-        return {
-            index: targetGpu.index,
-            name: targetGpu.name,
-            pci_domain: targetGpu.pci_domain,
-            pci_bus: targetGpu.pci_bus,
-            total_memory_gb: targetGpu.total_memory_gb,
-            source: targetGpu.source, // 直接保留子对象
-            _type: 'GPU_DETAIL' // 内部标记位，方便模板判断
-        };
-    } catch (e: any) {
-        console.error("handleGPU 处理出错:", e);
-        return { error: "数据解析异常" };
-    }
-};
-
-
-/**
- * 提取指定 GPU 的 GPU→GPU 链路信息
- */
-function extractGpuToGpu(gpuToGpu: any, gpuIndex: number) {
-    const result: any = {};
-
-    for (const metric in gpuToGpu) {
-        result[metric] = {};
-        for (const p2pMode in gpuToGpu[metric]) {
-            result[metric][p2pMode] = {};
-            const modeObj = gpuToGpu[metric][p2pMode];
-
-            for (const direction in modeObj) {
-                const matrix: any[][] = modeObj[direction];
-
-                // 仅保留第 gpuIndex 个列表（行）
-                result[metric][p2pMode][direction] = [matrix[gpuIndex]];
-            }
-        }
-    }
-
-    return result;
-}
-
-/**
- * 提取指定 GPU 的 GPU→Host 链路信息
- */
-/**
- * 提取特定 GPU 索引的 Host 传输数据
- * @param gpuToHost 原始的 gpu_to_host 对象
- * @param gpuIndex GPU 的索引 (0, 1, 2...)
- */
-function extractGpuToHost(gpuToHost: any, gpuIndex: number) {
-    if (!gpuToHost) return {};
-
-    const result: any = {};
-
-    // 遍历 Metric (bandwidth_GBps, latency_us)
-    for (const metric in gpuToHost) {
-        result[metric] = {};
-
-        // 遍历 Mode (pageable, pinned)
-        for (const mode in gpuToHost[metric]) {
-            result[metric][mode] = {};
-
-            const directions = gpuToHost[metric][mode]; // 包含 H_to_D 和 D_to_H
-
-            // 遍历方向 (H_to_D, D_to_H)
-            for (const dir in directions) {
-                const arr = directions[dir];
-
-                if (Array.isArray(arr)) {
-                    // 提取该 GPU 对应的值。如果越界则返回 null 或 0
-                    result[metric][mode][dir] = arr.length > gpuIndex ? arr[gpuIndex] : null;
-                } else {
-                    result[metric][mode][dir] = "N/A";
-                }
-            }
-        }
-    }
-    return result;
-}
-
-/**
- * 提取 CPU 对应的 GPU→Host 信息
- */
-function extractCpuRelatedGpu(gpuToHost: any, cpuIndex: number, gpuNum: number, cpuNum: number) {
-    if (!gpuToHost) return {};
-
-    const result: any = {};
-
-    // 1. 计算每个 CPU 对应的 GPU 数量 (x)
-    // 例如：8个GPU / 2个CPU = 每个CPU对应 4 个GPU
-    const x = Math.floor(gpuNum / cpuNum);
-
-    // 2. 计算当前 CPU 应该截取的 GPU 数组范围
-    const start = cpuIndex * x;
-    const end = (cpuIndex + 1) * x;
-
-    for (const metric in gpuToHost) {
-        result[metric] = {};
-        for (const mode in gpuToHost[metric]) {
-            const directions = gpuToHost[metric][mode];
-            result[metric][mode] = {};
-
-            for (const dir in directions) {
-                const arr = directions[dir]; // 这里的 arr 长度通常等于 gpuNum
-
-                if (Array.isArray(arr)) {
-                    // 3. 使用 slice 提取该 CPU 管辖范围内的所有 GPU 数据
-                    // 结果将是一个长度为 x 的数组
-                    const sliceData = arr.slice(start, end);
-
-                    // 如果截取结果为空（防止越界），给定默认值
-                    result[metric][mode][dir] = sliceData.length > 0 ? sliceData : ["N/A"];
-                } else {
-                    result[metric][mode][dir] = ["N/A"];
-                }
-            }
-        }
-    }
-
-    return result;
-}
-
 
 // 属性格式化逻辑
 const formattedProperties = computed(() => {
@@ -688,42 +516,34 @@ const formattedProperties = computed(() => {
 
 const renderLabel = (key: string) => labelMap[key] || key;
 
-
-const originalData = ref<any>(null);
-
-const lastInfoIp = ref("")
-
-// 修改后的查看详情函数
 const viewMonitor = async () => {
-    // 假设 ip 存储在 info.properties.ip 中
-    console.log('节点详情的info对象:', props.info);
-    const ip = props.info?.properties?.ip;
-    const port = props.info?.port;
+    const { ip, port } = resolveNodeEndpoint(props.info ?? {});
     if (!ip) {
-        console.error("未找到有效的 IP 地址");
+        ElMessage.warning('未找到节点 IP，请重新选择 HOST 节点');
         return;
     }
 
     isLoading.value = true;
-    fetchedData.value = { loading: `正在获取节点${ip}的拓扑感知数据，这个过程可能需要40s左右，请耐心等待` };
+    fetchedData.value = {
+        loading: `正在获取节点 ${ip} 的拓扑感知数据，约需 40s，请耐心等待...`,
+    };
     try {
-        const response = await fetch(apiUrl(`/topology/info/node/detail?ip=${ip}&port=${port}`));
-        if (!response.ok) throw new Error('网络响应异常');
-        const json = await response.json();
-        // fetchedData.value = json; // 将获取的数据存入响应式变量
-        // fetchedData.value = { success: "数据获取成功，点击组件查看相关数据" }
-        fetchedData.value = json
-        ElMessage.success(`节点 ${ip} 的数据获取成功, 点击查看感知信息数据！`);
+        const json = await fetchNodeDetail(ip, port);
         originalData.value = json;
-        lastInfoIp.value = ip as string;
-    } catch (error) {
-        console.error("获取数据失败:", error);
-        fetchedData.value = { error: "无法获取节点拓扑感知数据" };
+        lastInfoIp.value = ip;
+        fetchedData.value = json;
+        ElMessage.success(`节点 ${ip} 感知数据获取成功，请点击 CPU/GPU/链路查看`);
+    } catch (error: unknown) {
+        console.error('获取数据失败:', error);
+        const msg =
+            (error as { response?: { data?: { error?: string } } })?.response?.data?.error ??
+            '无法获取节点拓扑感知数据';
+        fetchedData.value = { error: msg };
         originalData.value = null;
+        ElMessage.error(msg);
     } finally {
         isLoading.value = false;
     }
-    console.log('接口返回的原始数据:', fetchedData.value);
 };
 
 watch(() => props.info, (newInfo) => {

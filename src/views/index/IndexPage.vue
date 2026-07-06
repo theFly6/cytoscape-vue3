@@ -192,6 +192,7 @@ const handleElementSelect = (data: any) => {
         selectedInfo.value.target = data.target;
 
         if (data.target?.includes('marslink')) {
+            selectedInfo.value.label = `${data.source} -> gpu*`;
             selectedInfo.value.labels = ['gpu*', ...Array.from({ length: gpuNum.value }, (_, i) => `gpu${i}`)];
         }
     }
