@@ -122,7 +122,7 @@ export async function loadRealNodeTopology(ctx: RealNodeContext): Promise<{
     } catch (err: unknown) {
         const msg =
             (err as { response?: { data?: { error?: string } } })?.response?.data?.error ??
-            '从 Neo4j 获取拓扑图失败，请确认 express 与 Neo4j 已启动';
+            '获取 Cytoscape 拓扑图失败，请先加载节点或检查 express 日志';
         throw new Error(msg);
     }
 
