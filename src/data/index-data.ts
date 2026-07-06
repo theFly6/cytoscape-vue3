@@ -253,6 +253,14 @@ export const typeData = [
             'curve-style': 'haystack' // 最简单的直线，性能最好
         }
     },
+    {
+        selector: 'edge[type="NV_LINK"]',
+        style: {
+            'width': 3,
+            'line-color': '#10b981',
+            'curve-style': 'bezier',
+        }
+    },
     // 下面三个是节点间的特殊样式
     {
         selector: 'node[type="SWITCH"]',

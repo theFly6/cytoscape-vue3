@@ -10,11 +10,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue';
+import { ref, watch } from 'vue';
 import Sidebar from './components/Sidebar.vue';
 import TopologyGraph from './components/TopologyGraph.vue';
 import DetailPanel from './components/DetailPanel.vue';
-import { topologyData as rawTopologyData } from '@/data/index-data'; // 移出的静态模拟数据
+import { isMockTopologyKey, loadMockTopology } from '@/views/index/utils/mockTopology';
 import { useTopologyStore } from '@/stores/useIndexStore';
 import { api } from '@/api/client';
 import { edgeLineColor, nodeBackgroundColor, nodeShape } from '@/data/styleFunctions';
@@ -32,46 +32,20 @@ const nodesLabel = ref()
 
 watch(currentNodeId, async () => {
     console.log('当前选中节点ID变化:', currentNodeId.value);
+    selectedInfo.value = null;
 
-    if (currentNodeId.value == 'global_network' || currentNodeId.value == "node_ai_01") {
-        console.log('当前节点为Fake节点');
-        // 1. 获取当前选中节点的原始数据（深拷贝防止污染原始数据）
-        const data = JSON.parse(JSON.stringify((rawTopologyData as any)[currentNodeId.value] || []));
-
-        // 2. 遍历并加工数据
-        const res = data.map((el: any) => {
-            // 针对 HOST 类型节点（物理服务器），构建展示用的多行 Label
-            if (el.data.type === 'HOST') {
-                const props = el.data.properties || {};
-                const id = el.data.id;
-
-                // --- 模拟原代码中的卡片构建逻辑 ---
-                let cardText = `${el.data.label}\n`;
-                cardText += `--------------------------\n`; // 分隔线
-
-                // 根据 ID 或属性定制化展示内容
-                if (id === 'node_ai_01') {
-                    cardText += `🚀 加速卡: H100 x 8\n`;
-                    cardText += `💻 CPU: Epyc x 4\n`;
-                    cardText += `📊 负载: 75% | 🌡️ 65°C`;
-                } else if (id === 'node_hpc_02') {
-                    cardText += `🚀 加速卡: H100 x 8\n`;
-                    cardText += `💻 CPU: Epyc x 4\n`;
-                    cardText += `💾 内存: 1024GB`;
-                } else {
-                    // 通用节点展示逻辑
-                    cardText += `📍 IP: ${props.ip || 'N/A'}\n`;
-                    cardText += `状态: 🟢 运行中`;
-                }
-
-                // 将处理好的字符串存入 fullLabel，供 Cytoscape 的 style 渲染
-                el.data.fullLabel = cardText;
-            }
-
-            return el;
-        });
-        console.log('res', res);
-        return currentElements.value = res;
+    if (isMockTopologyKey(currentNodeId.value)) {
+        console.log('当前节点为 Mock 拓扑');
+        const { elements, cpuNum: cpus, gpuNum: gpus } = loadMockTopology(currentNodeId.value);
+        cpuNum.value = cpus;
+        gpuNum.value = gpus;
+        allSshNodes.value = [];
+        nodesLabel.value = undefined;
+        currentElements.value = elements as any;
+        if (elements.length === 0) {
+            ElMessage.warning('Mock 拓扑数据为空');
+        }
+        return;
     }
     // 如果'/'符号在currentNodeId中，说明是一个多节点间链路
     if (currentNodeId.value.includes('/')) {
