@@ -29,7 +29,7 @@
                         <div class="detail-row">
                             <span class="detail-label">
                                 <i class="dot" :class="key"></i>
-                                {{ renderLabel(key as string) }}
+                                {{ renderLabel(String(key)) }}
                             </span>
                             <span class="detail-value" :class="{ 'status-active': value === '🟢 激活' }">
                                 {{ value }}
@@ -44,6 +44,15 @@
                     <div class="perception-banner__body">
                         <div class="perception-banner__title">{{ hostPerceptionBanner.title }}</div>
                         <div class="perception-banner__desc">{{ hostPerceptionBanner.desc }}</div>
+                    </div>
+                </div>
+
+                <div v-if="networkProbeBanner" class="perception-banner"
+                    :class="`perception-banner--${networkProbeBanner.type}`">
+                    <span class="perception-banner__icon">{{ networkProbeBanner.icon }}</span>
+                    <div class="perception-banner__body">
+                        <div class="perception-banner__title">{{ networkProbeBanner.title }}</div>
+                        <div class="perception-banner__desc">{{ networkProbeBanner.desc }}</div>
                     </div>
                 </div>
 
@@ -68,16 +77,18 @@
                     </button>
                 </div>
 
-                <div v-if="['NET_LINK'].includes(info.type)" class="card-actions">
-                    <button class="primary-action" @click="viewBetweenNodes()">
-                        <span>📈 节点间拓扑感知</span>
+                <div v-if="['NET_LINK', 'O_HOST'].includes(info.type)" class="card-actions">
+                    <button v-if="!hasCachedNetworkProbe" class="primary-action"
+                        @click="viewBetweenNodes(false)" :disabled="isLoading">
+                        <span>{{ isLoading ? '⏳ 探测中...' : '📈 节点间拓扑感知' }}</span>
+                    </button>
+                    <button v-else class="primary-action primary-action--secondary"
+                        @click="viewBetweenNodes(true)" :disabled="isLoading">
+                        <span>{{ isLoading ? '⏳ 探测中...' : '🔄 重新探测' }}</span>
                     </button>
                 </div>
 
                 <div v-if="['O_HOST'].includes(info.type)" class="card-actions">
-                    <button class="primary-action" @click="viewBetweenNodes()">
-                        <span>📈 节点间拓扑感知</span>
-                    </button>
                     <button class="primary-action" @click="enterNode()">
                         <span>📈 节点内拓扑感知</span>
                     </button>
@@ -112,7 +123,6 @@ import { computed, ref, watch } from 'vue';
 import type { DetailInfo } from '../types/topology';
 import { ElMessage } from 'element-plus';
 import { useTopologyStore } from '@/stores/useIndexStore';
-import { apiUrl } from '@/api/client';
 import {
     buildGpuDetail,
     buildLinkPerception,
@@ -122,6 +132,19 @@ import {
     resolveGpuTargetFilter,
     resolveNodeEndpoint,
 } from '@/views/index/utils/detailPerception';
+import {
+    formatNetLinkEdgeLabel,
+    probeNetLink,
+    probeOHost,
+    type NetworkProbeResult,
+} from '@/views/index/utils/networkProbe';
+import {
+    getNetworkProbeCache,
+    hasNetworkProbeCache,
+    netLinkCacheKey,
+    oHostCacheKey,
+    setNetworkProbeCache,
+} from '@/views/index/utils/networkProbeCache';
 import {
     getPerceptionCache,
     hasPerceptionCache,
@@ -135,7 +158,12 @@ const props = defineProps<{
     cpuNum: number;
     gpuNum: number;
     allSshNodes: string[];
-    nodesLabel: Record<string, string>;
+    nodesLabel?: Record<string, string>;
+}>();
+
+const emit = defineEmits<{
+    clearDetails: [];
+    networkLinkUpdate: [{ linkId: string; label: string }];
 }>();
 
 // 新增：用于存储接口返回的原始 JSON 数据
@@ -179,6 +207,40 @@ const hasCachedPerceptionForCurrentHost = computed(() => {
     return ip ? hasPerceptionCache(ip, port) : false;
 });
 
+function resolveNetworkProbeCacheKey(info: DetailInfo | null): string | null {
+    if (!info) return null;
+    if (info.type === 'O_HOST') {
+        const ip = info.properties?.ip as string | undefined;
+        return ip ? oHostCacheKey(ip) : null;
+    }
+    if (info.type === 'NET_LINK') {
+        const source = (info as { source?: string }).source;
+        const target = (info as { target?: string }).target;
+        return source && target ? netLinkCacheKey(source, target) : null;
+    }
+    return null;
+}
+
+const hasCachedNetworkProbe = computed(() => {
+    const key = resolveNetworkProbeCacheKey(props.info);
+    return key ? hasNetworkProbeCache(key) : false;
+});
+
+function restoreNetworkProbeFromCache(info: DetailInfo): boolean {
+    const key = resolveNetworkProbeCacheKey(info);
+    if (!key) return false;
+    const cached = getNetworkProbeCache(key);
+    if (!cached) return false;
+    fetchedData.value = cached;
+    if (info.type === 'NET_LINK' && info.source && info.target) {
+        const label = formatNetLinkEdgeLabel(cached);
+        if (label && label !== '已探测') {
+            emit('networkLinkUpdate', { linkId: info.id, label });
+        }
+    }
+    return true;
+}
+
 const hostPerceptionBanner = computed(() => {
     if (props.info?.type !== 'HOST' || !fetchedData.value) return null;
     if (fetchedData.value.loading) {
@@ -205,6 +267,43 @@ const hostPerceptionBanner = computed(() => {
             desc: hasCachedPerceptionForCurrentHost.value
                 ? '已复用缓存数据，点击 CPU/GPU/链路查看；如需更新请点「重新感知」'
                 : '点击拓扑图中的 CPU、GPU 或链路查看详细指标',
+        };
+    }
+    return null;
+});
+
+const networkProbeBanner = computed(() => {
+    const type = props.info?.type;
+    if (type !== 'O_HOST' && type !== 'NET_LINK') return null;
+    const data = fetchedData.value as NetworkProbeResult | null;
+    if (!data) return null;
+
+    if (isLoading.value || data.loading) {
+        const desc =
+            typeof data.loading === 'string'
+                ? data.loading
+                : data.message ?? '正在执行网络探测，带宽测试可能较慢...';
+        return { type: 'loading', icon: '⏳', title: '正在探测', desc };
+    }
+    if (data.error) {
+        return { type: 'error', icon: '❌', title: '探测失败', desc: String(data.error) };
+    }
+    if (data.bandwidthLoading) {
+        return {
+            type: 'loading',
+            icon: '⚡',
+            title: '时延已完成',
+            desc: data.message ?? '正在测试带宽，请稍候...',
+        };
+    }
+    if (data.success || data.latData || data.latDataAB) {
+        return {
+            type: 'ready',
+            icon: '✅',
+            title: '探测数据已就绪',
+            desc: hasCachedNetworkProbe.value
+                ? '已复用缓存结果；如需更新请点「重新探测」'
+                : '时延与带宽结果见下方摘要',
         };
     }
     return null;
@@ -240,7 +339,6 @@ watch(selectedLabel, () => {
 const visibleFields = computed(() => {
     if (!fetchedData.value) return [];
     const data = fetchedData.value;
-    console.log("@@@data", data);
     const items: { label: string; value: string | number; class?: string }[] = [];
     if (props.info?.type === 'HOST') {
         return items;
@@ -249,10 +347,8 @@ const visibleFields = computed(() => {
     if (props.info?.type === 'O_HOST') {
         const data = fetchedData.value;
 
-        // 初始加载状态
         if (!data || (data.loading && !data.latData?.results)) {
-            console.log(!data == true, data.loading, !data.latData?.results);
-            return [{ label: '状态', value: '正在初始化探测...', class: 'data-item' }];
+            return [];
         }
 
         const items: { label: string; value: string | number; class?: string }[] = [];
@@ -264,7 +360,7 @@ const visibleFields = computed(() => {
 
             data.latData.results.forEach((res: any) => {
                 const targetIp = res.target;
-                const targetHostname = props.nodesLabel[targetIp] || targetIp;
+                const targetHostname = props.nodesLabel?.[targetIp] || targetIp;
                 items.push({
                     label: `${sourceLabel} -> ${targetHostname}`,
                     value: res.success ? `${res.latency_ms} ms` : '测量失败',
@@ -281,11 +377,13 @@ const visibleFields = computed(() => {
         } else if (data.bwData.results && data.bwData.results.length > 0) {
             data.bwData.results.forEach((res: any) => {
                 const targetIp = res.dest; // 注意：带宽接口返回字段是 dest
-                const targetHostname = props.nodesLabel[targetIp] || targetIp;
+                const targetHostname = props.nodesLabel?.[targetIp] || targetIp;
 
                 items.push({
                     label: `${sourceLabel} -> ${targetHostname}`,
-                    value: res.success ? `${parseFloat(res.bandwidth_mbps).toFixed(2)} Mbps` : '测量失败',
+                    value: res.success
+                        ? `${parseFloat(res.bandwidth_mbps!).toFixed(2)} Mbps`
+                        : (res.error ?? '测量失败'),
                     class: 'data-item'
                 });
             });
@@ -302,14 +400,16 @@ const visibleFields = computed(() => {
     if (props.info?.type === 'NET_LINK') {
         const data = fetchedData.value;
 
-        // 1. 彻底没有数据且不在加载时，显示等待
-        if (!data || (!data.loading && !data.latDataAB && !data.bwDataAB)) {
-            return [{ label: '状态', value: '等待测量数据...', class: 'data-item' }];
+        if (!data || (data.loading && !data.latDataAB && !data.bwDataAB)) {
+            return [];
+        }
+        if (!data.latDataAB && !data.bwDataAB && !data.bandwidthLoading) {
+            return [];
         }
 
         const items: { label: string; value: string | number; class?: string }[] = [];
-        const nameA = props.nodesLabel[(props.info as any).source] || (props.info as any).source;
-        const nameB = props.nodesLabel[(props.info as any).target] || (props.info as any).target;
+        const nameA = props.nodesLabel?.[props.info.source ?? ''] || props.info.source;
+        const nameB = props.nodesLabel?.[props.info.target ?? ''] || props.info.target;
 
         // --- 1. 链路时延 (双向) ---
         // 只有当至少有一个方向的时延数据成功获取后才显示分类
@@ -337,12 +437,16 @@ const visibleFields = computed(() => {
             } else if (data.isBiDirectional) {
                 items.push({
                     label: `${nameA} → ${nameB}`,
-                    value: data.bwDataAB?.success ? `${parseFloat(data.bwDataAB.bandwidth_mbps).toFixed(2)} Mbps` : '失败',
+                    value: data.bwDataAB?.success
+                        ? `${parseFloat(data.bwDataAB.bandwidth_mbps!).toFixed(2)} Mbps`
+                        : (data.bwDataAB?.error ?? '失败'),
                     class: 'data-item'
                 });
                 items.push({
                     label: `${nameB} → ${nameA}`,
-                    value: data.bwDataBA?.success ? `${parseFloat(data.bwDataBA.bandwidth_mbps).toFixed(2)} Mbps` : '失败',
+                    value: data.bwDataBA?.success
+                        ? `${parseFloat(data.bwDataBA.bandwidth_mbps!).toFixed(2)} Mbps`
+                        : (data.bwDataBA?.error ?? '失败'),
                     class: 'data-item'
                 });
             }
@@ -532,7 +636,6 @@ const isSameGpu = (targetLabel: string) => {
     return sourceIdx !== null && targetIdx !== null && sourceIdx === targetIdx;
 };
 
-// 监测info变化，修改fetchedData的值
 watch(
     () => props.info,
     (newInfo: any) => {
@@ -545,6 +648,12 @@ watch(
             if (restorePerceptionFromCache(newInfo)) return;
             fetchedData.value = null;
             originalData.value = null;
+            return;
+        }
+
+        if (newInfo.type === 'O_HOST' || newInfo.type === 'NET_LINK') {
+            if (restoreNetworkProbeFromCache(newInfo)) return;
+            fetchedData.value = null;
             return;
         }
 
@@ -572,7 +681,7 @@ watch(
         }
         fetchedData.value = buildLinkPerception(newInfo, originalData.value, props.gpuNum, props.cpuNum);
     },
-    { deep: true },
+    { immediate: true, deep: true },
 );
 
 // 属性格式化逻辑
@@ -628,135 +737,72 @@ const viewMonitor = async (force = false) => {
     }
 };
 
-watch(() => props.info, (newInfo) => {
-    if (!newInfo) {
-        fetchedData.value = null;
+const viewBetweenNodes = async (force = false) => {
+    const info = props.info;
+    if (!info || (info.type !== 'O_HOST' && info.type !== 'NET_LINK')) return;
+
+    const cacheKey = resolveNetworkProbeCacheKey(info);
+    if (!cacheKey) return;
+
+    if (!force && hasNetworkProbeCache(cacheKey)) {
+        restoreNetworkProbeFromCache(info);
         return;
     }
 
-    let cacheKey = '';
-    if (newInfo.type === 'O_HOST') {
-        cacheKey = `net_topo_${newInfo.properties?.ip}`;
-    } else if (newInfo.type === 'NET_LINK') {
-        cacheKey = `link_topo_${newInfo.id}`;
-    }
-
-    if (cacheKey) {
-        const cachedStr = localStorage.getItem(cacheKey);
-        if (cachedStr) {
-            try {
-                fetchedData.value = JSON.parse(cachedStr);
-            } catch (e) {
-                fetchedData.value = null;
-            }
-        } else {
-            fetchedData.value = null;
-        }
-    }
-}, { immediate: true });
-
-const viewBetweenNodes = async () => {
-    const info = props.info;
-    if (!info) return;
-
-    let sourceIp = '';
-    let targetIps = '';
-    let cacheKey = '';
-
-    // --- 1. 基础参数提取 ---
-    if (info.type === 'O_HOST') {
-        sourceIp = (info as any).properties.ip;
-        targetIps = props.allSshNodes.filter(ip => ip !== sourceIp).join(',');
-        cacheKey = `net_topo_${sourceIp}`;
-    } else if (info.type === 'NET_LINK') {
-        sourceIp = (info as any).source;
-        targetIps = (info as any).target;
-        cacheKey = `link_topo_${(info as any).id}`;
-    }
-    if (!sourceIp || !targetIps) return;
-
     isLoading.value = true;
-    // 初始状态
-    fetchedData.value = { loading: true, message: '正在探测双向时延...' };
+    fetchedData.value = { loading: true, message: '正在初始化网络探测...' };
 
     try {
-        let finalData: any = {};
+        let finalData: NetworkProbeResult;
 
         if (info.type === 'NET_LINK') {
-            const A = (info as any).source;
-            const B = (info as any).target;
-
-            // --- 2. 获取双向时延 ---
-            // A -> B
-            const latResAB = await fetch(apiUrl(`/network/latency?source=${A}&targets=${B}`));
-            const latJsonAB = await latResAB.json();
-
-            // B -> A
-            const latResBA = await fetch(apiUrl(`/network/latency?source=${B}&targets=${A}`));
-            const latJsonBA = await latResBA.json();
-
-            // 先更新一次 UI，让用户看到时延数据，同时显示带宽加载中
-            fetchedData.value = {
-                latDataAB: latJsonAB.results[0],
-                latDataBA: latJsonBA.results[0],
-                bandwidthLoading: true,
-                message: '正在探测双向带宽...'
-            };
-
-            // --- 3. 获取双向带宽 (顺序执行避免竞争) ---
-            // A -> B
-            const bwResAB = await fetch(apiUrl(`/network/bandwidth?source=${A}&dests=${B}`));
-            const bwJsonAB = await bwResAB.json();
-
-            // B -> A
-            const bwResBA = await fetch(apiUrl(`/network/bandwidth?source=${B}&dests=${A}`));
-            const bwJsonBA = await bwResBA.json();
-
-            finalData = {
-                success: true,
-                updateTime: new Date().toLocaleString(),
-                latDataAB: latJsonAB.results[0],
-                latDataBA: latJsonBA.results[0],
-                bwDataAB: bwJsonAB.results[0],
-                bwDataBA: bwJsonBA.results[0],
-                bandwidthLoading: false,
-                isBiDirectional: true // 标记为双向链路数据
-            };
-        } else {
-            // --- O_HOST (一对多) 逻辑保持不变 ---
-            const latRes = await fetch(apiUrl(`/network/latency?source=${sourceIp}&targets=${targetIps}`));
-            const latJson = await latRes.json();
-
-            if (latJson.success) {
-                fetchedData.value = { latData: latJson, bandwidthLoading: true };
+            const sourceA = info.source;
+            const sourceB = info.target;
+            if (!sourceA || !sourceB) {
+                ElMessage.warning('链路端点无效');
+                return;
             }
 
-            const bwRes = await fetch(apiUrl(`/network/bandwidth?source=${sourceIp}&dests=${targetIps}`));
-            const bwJson = await bwRes.json();
+            finalData = await probeNetLink(sourceA, sourceB, (phase) => {
+                fetchedData.value = { ...fetchedData.value, ...phase };
+            });
 
-            finalData = {
-                success: true,
-                updateTime: new Date().toLocaleString(),
-                latData: latJson,
-                bwData: bwJson,
-                bandwidthLoading: false,
-            };
+            emit('networkLinkUpdate', {
+                linkId: info.id,
+                label: formatNetLinkEdgeLabel(finalData),
+            });
+        } else {
+            const sourceIp = info.properties?.ip as string;
+            const targetList = props.allSshNodes.filter((ip) => ip !== sourceIp);
+            if (!sourceIp) {
+                ElMessage.warning('未找到源节点 IP');
+                return;
+            }
+            if (targetList.length === 0) {
+                ElMessage.warning('子网内暂无其他 SSH 可达节点');
+                fetchedData.value = { error: '子网内暂无其他可达节点' };
+                return;
+            }
+
+            finalData = await probeOHost(sourceIp, targetList, (phase) => {
+                fetchedData.value = { ...fetchedData.value, ...phase };
+            });
         }
 
-        // --- 4. 存储与更新 ---
-        if (finalData.success) {
-            fetchedData.value = finalData;
-            localStorage.setItem(cacheKey, JSON.stringify(finalData));
-        }
+        setNetworkProbeCache(cacheKey, finalData);
+        fetchedData.value = finalData;
+        ElMessage.success('网络探测完成');
     } catch (err) {
         console.error(err);
-        ElMessage.error('双向探测失败');
+        const msg =
+            (err as { response?: { data?: { error?: string } } })?.response?.data?.error ??
+            (err instanceof Error ? err.message : '网络探测失败');
+        fetchedData.value = { error: msg };
+        ElMessage.error(msg);
     } finally {
         isLoading.value = false;
     }
 };
-
-const emit = defineEmits(['clearDetails']);
 
 const enterNode = () => {
     currentNodeId.value = props.info?.id as string;

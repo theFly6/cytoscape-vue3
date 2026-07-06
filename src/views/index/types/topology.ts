@@ -21,8 +21,11 @@ export interface DetailInfo {
     labels?: string[];
     ip: string;
     type: string;
-    port: number
+    port: number;
     properties: TopologyProperty;
+    source?: string;
+    target?: string;
+    hostname?: string;
 }
 
 export type TopologyDataMap = Record<string, TopologyElement[]>;

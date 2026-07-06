@@ -5,7 +5,8 @@
         <TopologyGraph :elements="currentElements" :current-node-id="currentNodeId" :trigger-reset="resetCounter"
             @select-element="handleElementSelect" @drill-down="handleDrillDown($event)" />
         <DetailPanel :info="selectedInfo" :cpuNum="cpuNum" :gpuNum="gpuNum" :allSshNodes="allSshNodes"
-            :nodesLabel="nodesLabel" @clearDetails="handleClearDetails" />
+            :nodesLabel="nodesLabel" @clearDetails="handleClearDetails"
+            @network-link-update="handleNetworkLinkUpdate" />
     </div>
 </template>
 
@@ -19,6 +20,7 @@ import { loadRealNodeTopology } from '@/views/index/utils/realTopology';
 import { useTopologyStore } from '@/stores/useIndexStore';
 import { api } from '@/api/client';
 import { ElMessage } from 'element-plus';
+import { applyCachedNetLinkLabels } from '@/views/index/utils/networkProbeCache';
 
 const { currentNodeId, nodes } = useTopologyStore();
 const selectedInfo = ref<any>(null);
@@ -111,7 +113,7 @@ watch(currentNodeId, async () => {
             }
             cpuNum.value = 0;
             gpuNum.value = 0;
-            currentElements.value = elements;
+            currentElements.value = applyCachedNetLinkLabels(elements);
         } catch (err) {
             console.error('获取子网拓扑失败', err);
             currentElements.value = [];
@@ -169,6 +171,15 @@ const handleReload = () => {
 
 const handleClearDetails = () => {
     selectedInfo.value = null;
+};
+
+const handleNetworkLinkUpdate = (payload: { linkId: string; label: string }) => {
+    currentElements.value = currentElements.value.map((el) => {
+        if (el.data?.id === payload.linkId && el.data?.type === 'NET_LINK') {
+            return { ...el, data: { ...el.data, label: payload.label } };
+        }
+        return el;
+    });
 };
 
 const handleDrillDown = (nodeId: string) => {
