@@ -1,50 +1,26 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import CytoscapePage from '../views/cytoscape/CytoscapePage.vue'
-import GraphmlPage from '../views/graphml/GraphmlPage.vue'
-import PlayGround from '../views/playground/PlayGround.vue'
-import TopologyPage from '../views/topology/TopologyPage.vue'
 import IndexPage from '../views/index/IndexPage.vue'
 
+/** Feat-8：遗留实验页已下线，统一重定向到主入口 IndexPage */
+const LEGACY_REDIRECTS = ['/topology', '/cytoscape', '/graphml', '/playground'] as const
+
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [
-    {
-      path: '/',
-      component: IndexPage,
-    },
-    {
-      path: '/topology',
-      component: TopologyPage,
-    },
-    {
-      path: '/cytoscape',
-      name: 'cytoscape',
-      component: CytoscapePage,
-    },
-    {
-      path: '/graphml',
-      name: 'graphml',
-      component: GraphmlPage,
-    },
-    {
-      path: '/playground',
-      name: 'playground',
-      component: PlayGround,
-    },
-    {
-      path: '/topology',
-      name: 'topology',
-      component: TopologyPage,
-    },
-    // {
-    //   path: '/cytoscape',
-    //   name: 'cytoscape',
-    // route level code-splitting
-    // this generates a separate chunk (Cytoscape.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    //   component: () => import('../views/CytoscapeView.vue'),
-    // },
-  ],
+    history: createWebHistory(import.meta.env.BASE_URL),
+    routes: [
+        {
+            path: '/',
+            name: 'index',
+            component: IndexPage,
+        },
+        ...LEGACY_REDIRECTS.map((path) => ({
+            path,
+            redirect: '/',
+        })),
+        {
+            path: '/:pathMatch(.*)*',
+            redirect: '/',
+        },
+    ],
 })
 
 export default router
