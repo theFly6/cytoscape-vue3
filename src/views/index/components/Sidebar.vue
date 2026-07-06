@@ -20,7 +20,7 @@
 
             <el-dialog v-model="isModalOpen" title="节点清单管理" width="600px" :before-close="handleBeforeClose"
                 destroy-on-close>
-                <el-table :data="editableNodes.slice(2)" stripe style="width: 100%" max-height="300">
+                <el-table v-loading="isLoading" :data="editableNodes" stripe style="width: 100%" max-height="300">
                     <el-table-column label="主机名" width="120">
                         <template #default="scope">
                             <el-input v-model="scope.row.hostname" size="small" placeholder="请输入主机名" />
@@ -118,15 +118,13 @@
 
 <script setup lang="ts">
 import { LegendData } from '@/data/index-data';
-import { useTopologyStore } from '@/stores/useIndexStore';
-import { Setting, Plus } from '@element-plus/icons-vue'
+import { useTopologyStore, type TopologyNodeOption } from '@/stores/useIndexStore';
+import { Plus } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus';
-import { useDebounceFn } from '@/utils/useDebounceFn';
-// 使用共享 store
-const { nodes, currentNodeId, fetchNodes } = useTopologyStore();
-
 import { onMounted, reactive, ref } from 'vue';
+
 const store = useTopologyStore();
+const { nodes, currentNodeId, fetchNodes, isLoading } = store;
 
 
 const emit = defineEmits(['reload', 'clearDetails']);
@@ -139,33 +137,31 @@ const onSelectChange = (e: Event) => {
 };
 
 onMounted(async () => {
-    fetchNodes();
-    // 每3秒刷新一次
-    // setInterval(async () => {
-    //     console.log("刷新节点")
-    //     useDebounceFn(() => {
-    //         fetchNodes();
-    //     }, 1000)();
-    // }, 3000);
+    try {
+        await fetchNodes();
+    } catch {
+        ElMessage.error('加载节点列表失败，请确认 express 后端已启动');
+    }
 });
 
 // -----------节点管理--------------
 const isModalOpen = ref(false)
 const form = reactive({ hostname: '', ip: '', port: 22 })
-const editableNodes = ref<any[]>([]); // 弹窗内编辑的临时副本
+const editableNodes = ref<TopologyNodeOption[]>([]);
 
-// 打开弹窗并初始化副本
+const snapshotRemote = (list: TopologyNodeOption[]) =>
+    list
+        .filter((n) => !store.isMockNode(n))
+        .map(({ hostname, ip, port }) => ({ hostname, ip, port: Number(port ?? 22) }));
+
+// 打开弹窗并初始化副本（仅远程节点，mock 节点不可编辑）
 const openManager = () => {
-    // 过滤掉前两个（假设你 logic 依然需要 slice(2)）
-    // 注意：如果 slice(2) 是为了保护某些内置节点，后续保存需要把前两个拼回去
-    editableNodes.value = nodes.value.slice().map(node => ({ ...node }));
+    editableNodes.value = store.getRemoteNodes().map((node) => ({ ...node }));
     isModalOpen.value = true;
 };
 
-// 检查是否发生过修改
-const checkChanges = () => {
-    return JSON.stringify(nodes.value) !== JSON.stringify(editableNodes.value);
-};
+const checkChanges = () =>
+    JSON.stringify(snapshotRemote(nodes.value)) !== JSON.stringify(snapshotRemote(editableNodes.value));
 
 // 处理关闭逻辑 (Dialog 自带的 before-close)
 const handleBeforeClose = (done: () => void) => {
@@ -197,17 +193,19 @@ const handleBeforeClose = (done: () => void) => {
     }
 };
 
-/// 保存逻辑
 const handleSaveAll = async () => {
-    // 先检查editableNodes是否与nodes相同，相同则不保存
-    if (JSON.stringify(nodes.value) === JSON.stringify(editableNodes.value)) {
+    if (!checkChanges()) {
         ElMessage.info('配置未修改，无需保存');
+        isModalOpen.value = false;
         return;
     }
-    // 将修改后的副本同步回 Store 或直接提交后端
-    await store.updateNodes(editableNodes.value);
-    isModalOpen.value = false;
-    ElMessage.success('配置同步成功');
+    try {
+        await store.updateNodes(editableNodes.value);
+        isModalOpen.value = false;
+        ElMessage.success('配置已同步到 workers.conf');
+    } catch {
+        ElMessage.error('保存失败，请检查 express 与 topo-server 连接');
+    }
 };
 
 // 删除逻辑 (操作副本)
@@ -227,9 +225,16 @@ const handleAdd = () => {
     if (editableNodes.value.some(n => n.ip === form.ip)) {
         return ElMessage.error('IP 地址已存在');
     }
-    editableNodes.value.push({ ...form });
+    editableNodes.value.push({
+        hostname: form.hostname,
+        ip: form.ip,
+        port: form.port,
+        value: form.ip,
+        label: `${form.hostname} [${form.ip}]`,
+    });
     form.hostname = '';
     form.ip = '';
+    form.port = 22;
 };
 
 </script>
