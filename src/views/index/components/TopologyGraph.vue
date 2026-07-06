@@ -35,6 +35,15 @@ const savePositions = () => {
     localStorage.setItem(getStorageKey(), JSON.stringify(positions));
 };
 
+const coseLayout = {
+    name: 'cose',
+    padding: 64,
+    nodeRepulsion: 9000,
+    idealEdgeLength: 110,
+    edgeElasticity: 100,
+    animate: false,
+};
+
 const initCy = async (isCose = false) => {
     if (!cyContainer.value) return;
     if (cy) cy.value?.destroy();
@@ -61,23 +70,26 @@ const initCy = async (isCose = false) => {
             container: cyContainer.value,
             elements: elementsWithPos,
             style: typeData as any,
+            minZoom: 0.35,
+            maxZoom: 2.5,
+            wheelSensitivity: 0.25,
             layout: {
-                // 核心逻辑：如果有保存位置且不是强制重载(isCose)，则使用 preset 布局
                 name: hasSavedPos ? 'preset' : 'cose',
-                padding: 50,
-                // animate: true
-            }
+                padding: 64,
+                nodeRepulsion: 9000,
+                idealEdgeLength: 110,
+                animate: false,
+            },
         });
     } else {
         cy.value = cytoscape({
             container: cyContainer.value,
             style: typeData as any,
             elements: props.elements,
-            layout: {
-                name: 'cose',
-                padding: 50,
-                // animate: true
-            }
+            minZoom: 0.35,
+            maxZoom: 2.5,
+            wheelSensitivity: 0.25,
+            layout: coseLayout,
         });
     }
 
@@ -94,6 +106,7 @@ const initCy = async (isCose = false) => {
     // 初始化后自动保存一次位置
     setTimeout(() => {
         savePositions();
+        cy.value?.fit(undefined, 48);
     }, 500);
 };
 
@@ -118,7 +131,10 @@ onUnmounted(() => cy.value?.destroy());
 <style scoped>
 #cy {
     flex-grow: 1;
-    background: radial-gradient(circle at 50% 50%, #ffffff 0%, #f1f5f9 100%);
+    background:
+        radial-gradient(circle at 20% 20%, rgba(219, 234, 254, 0.35) 0%, transparent 45%),
+        radial-gradient(circle at 80% 80%, rgba(204, 251, 241, 0.25) 0%, transparent 40%),
+        linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
     position: relative;
 }
 </style>

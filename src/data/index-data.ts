@@ -161,61 +161,118 @@ export const typeData = [
     {
         selector: 'node',
         style: {
-            'label': 'data(label)',
-            'text-valign': 'center',
-            'color': '#000',
-            'background-color': '#999',
-            'font-size': '14px'
-        }
+            label: 'data(label)',
+            'text-valign': 'bottom',
+            'text-halign': 'center',
+            'text-margin-y': 6,
+            color: '#0f172a',
+            'font-family': 'Inter, system-ui, sans-serif',
+            'font-weight': 'bold',
+            'font-size': '11px',
+            'text-outline-color': '#ffffff',
+            'text-outline-width': 2.5,
+            'text-outline-opacity': 1,
+            'text-background-color': '#ffffff',
+            'text-background-opacity': 0.95,
+            'text-background-padding': '3px',
+            'text-background-shape': 'roundrectangle',
+            'background-color': '#94a3b8',
+            'border-width': 1,
+            'border-color': '#64748b',
+            'z-index': 10,
+        },
     },
     {
         selector: 'node[type="NUMA"]',
         style: {
-            'background-color': "#e1f5fe",
+            'background-color': '#e0f2fe',
+            'background-opacity': 0.35,
             'border-width': 2,
-            'border-color': '#007bff',
-            'shape': LegendData.NUMA.shape,
+            'border-color': '#0284c7',
+            shape: LegendData.NUMA.shape,
             'border-style': 'dashed',
             'text-valign': 'top',
-            'padding': '30px'
-        }
+            'text-margin-y': -8,
+            'font-size': '12px',
+            color: '#0369a1',
+            padding: '36px',
+            'z-index': 5,
+        },
     },
     {
         selector: 'node[type="CPU"]',
-        style: { 'background-color': LegendData.CPU.color, 'shape': LegendData.CPU.shape, 'width': 50, 'height': 50 }
+        style: {
+            'background-color': LegendData.CPU.color,
+            shape: LegendData.CPU.shape,
+            width: 56,
+            height: 56,
+            'border-width': 2,
+            'border-color': '#ca8a04',
+            'z-index': 12,
+        },
     },
     {
         selector: 'node[type="GPU"]',
-        style: { 'background-color': LegendData.GPU.color, 'shape': LegendData.GPU.shape, 'width': 70, 'height': 50 }
+        style: {
+            'background-color': LegendData.GPU.color,
+            shape: LegendData.GPU.shape,
+            width: 72,
+            height: 52,
+            'border-width': 2,
+            'border-color': '#0f766e',
+            'z-index': 12,
+        },
     },
     {
         selector: 'node[type="PCIe"]',
-        style: { 'background-color': LegendData.PCIe.color, 'shape': LegendData.PCIe.shape, 'width': 80, 'height': 50 }
+        style: {
+            'background-color': LegendData.PCIe.color,
+            shape: LegendData.PCIe.shape,
+            width: 64,
+            height: 64,
+            'border-width': 2,
+            'border-color': '#d97706',
+            'z-index': 11,
+        },
     },
     {
         selector: 'node[type="NIC"]',
-        style: { 'background-color': LegendData.NIC.color, 'shape': LegendData.NIC.shape, "width": 50, "height": 50 }
+        style: {
+            'background-color': LegendData.NIC.color,
+            shape: LegendData.NIC.shape,
+            width: 52,
+            height: 52,
+            'z-index': 11,
+        },
     },
     {
         selector: 'node[type="DEFAULT"]',
-        style: { 'background-color': LegendData.DEFAULT.color, 'shape': LegendData.DEFAULT.shape, 'width': 50, 'height': 50 }
+        style: {
+            'background-color': LegendData.DEFAULT.color,
+            shape: LegendData.DEFAULT.shape,
+            width: 52,
+            height: 52,
+            'z-index': 10,
+        },
     },
     {
         selector: 'edge',
         style: {
-            'width': 2,
+            width: 2,
             'line-color': '#cbd5e1',
-            'curve-style': 'bezier', // 默认为贝塞尔曲线，方便设置弧度
-            'control-point-step-size': 40, // 多个连接时的间距
+            'curve-style': 'bezier',
+            'control-point-step-size': 48,
             'target-arrow-shape': 'none',
-            'label': 'data(label)',
-            'font-size': '10px',
-            'color': '#64748b',
+            label: 'data(label)',
+            'font-size': '9px',
+            color: '#475569',
             'text-background-opacity': 1,
             'text-background-color': '#ffffff',
-            'text-background-padding': '2px',
-            'text-margin-y': -10
-        }
+            'text-background-padding': '3px',
+            'text-margin-y': -10,
+            'line-opacity': 0.75,
+            'z-index': 1,
+        },
     },
     {
         selector: 'edge[type="QPI"]',
@@ -236,12 +293,14 @@ export const typeData = [
     {
         selector: 'edge[type="LINK"]', // 比如 NVLink
         style: {
-            'width': 4,
-            'line-color': '#f97316',
-            'curve-style': 'unbundled-bezier', // 手动控制弯曲
-            'control-point-distances': [50],   // 向上弯曲 50 像素
-            'control-point-weights': [0.5]      // 在线条中点处弯曲
-        }
+            width: 3,
+            'line-color': '#fb923c',
+            'curve-style': 'unbundled-bezier',
+            'control-point-distances': [60],
+            'control-point-weights': [0.5],
+            'line-opacity': 0.65,
+            'z-index': 1,
+        },
     },
     {
         selector: 'edge[type="PCIe_LINK"]',
@@ -265,32 +324,47 @@ export const typeData = [
     {
         selector: 'node[type="SWITCH"]',
         style: {
-            'background-color': '#fff',
-            'shape': 'orthogonal-rectangle',
+            'background-color': '#fff7ed',
+            shape: 'round-rectangle',
             'border-width': 3,
-            'border-color': 'black',
-            'width': 140,
-            'height': 30,
-            'font-weight': 'bold'
-        }
+            'border-color': '#ea580c',
+            width: 168,
+            height: 48,
+            'font-weight': 'bold',
+            'font-size': '12px',
+            color: '#9a3412',
+            'text-valign': 'center',
+            'text-halign': 'center',
+            'text-margin-y': 0,
+            'text-background-color': '#fff7ed',
+            'text-background-opacity': 1,
+            'text-background-padding': '4px',
+            'z-index': 20,
+        },
     },
     {
         selector: 'node[type="HOST"]',
         style: {
             'border-width': 3,
-            'background-color': '#e1f5fe',
-            'border-color': '#007bff',
-            'shape': 'round-rectangle',
-            'width': 160,
-            'height': 80,
-            'label': 'data(fullLabel)',
-            'text-wrap': 'wrap',        // 允许换行
-            'text-max-width': 140,      // 每行最大宽度
-            'text-valign': 'center',    // 文字居中
+            'background-color': '#eff6ff',
+            'border-color': '#2563eb',
+            shape: 'round-rectangle',
+            width: 180,
+            height: 96,
+            label: 'data(fullLabel)',
+            'text-wrap': 'wrap',
+            'text-max-width': 160,
+            'text-valign': 'center',
             'text-halign': 'center',
-            'font-size': '11px',
-            'line-height': 1.4,         // 行间距
-        }
+            'text-margin-y': 0,
+            'font-size': '12px',
+            color: '#1e3a8a',
+            'line-height': 1.45,
+            'text-background-color': '#ffffff',
+            'text-background-opacity': 0.96,
+            'text-background-padding': '6px',
+            'z-index': 15,
+        },
     },
     {
         selector: 'node[type="O_HOST"]',

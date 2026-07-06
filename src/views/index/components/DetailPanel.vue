@@ -911,28 +911,46 @@ const enterNode = () => {
 
 .primary-action {
     width: 100%;
-    padding: 10px;
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
+    padding: 11px 14px;
+    background: #7088b0;
+    border: 1px solid #7088b0;
     border-radius: 8px;
     font-size: 13px;
     font-weight: 600;
-    color: #475569;
+    color: #ffffff;
     cursor: pointer;
     transition: all 0.2s;
 }
 
-/* 第一个.primary-action */
 .primary-action:first-child {
     margin-bottom: 10px;
 }
 
-
-.primary-action:hover {
-    background: #2563eb;
+.primary-action:hover:not(:disabled) {
+    background: #7088b0;
     color: #ffffff;
-    border-color: #2563eb;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+}
+
+.primary-action:disabled {
+    background: #94a3b8;
+    border-color: #94a3b8;
+    color: #f8fafc;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.primary-action.primary-action--secondary {
+    background: #ffffff;
+    color: #1d4ed8;
+    border: 2px solid #2563eb;
+}
+
+.primary-action.primary-action--secondary:hover:not(:disabled) {
+    background: #eff6ff;
+    color: #1e40af;
+    border-color: #1d4ed8;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
 }
 
 /* 空状态 */
@@ -1104,14 +1122,6 @@ const enterNode = () => {
 .perception-banner--error {
     border-color: #fecaca;
     background: #fef2f2;
-}
-
-.primary-action--secondary {
-    background: #64748b;
-}
-
-.primary-action--secondary:hover {
-    background: #475569;
 }
 
 .perception-banner__icon {
