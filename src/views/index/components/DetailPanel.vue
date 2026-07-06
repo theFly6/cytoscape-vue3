@@ -37,6 +37,16 @@
                         </div>
                     </div>
                 </div>
+
+                <div v-if="hostPerceptionBanner" class="perception-banner"
+                    :class="`perception-banner--${hostPerceptionBanner.type}`">
+                    <span class="perception-banner__icon">{{ hostPerceptionBanner.icon }}</span>
+                    <div class="perception-banner__body">
+                        <div class="perception-banner__title">{{ hostPerceptionBanner.title }}</div>
+                        <div class="perception-banner__desc">{{ hostPerceptionBanner.desc }}</div>
+                    </div>
+                </div>
+
                 <div v-if="fetchedData && visibleFields.length > 0" class="info-summary-wrapper">
                     <div class="summary-group">
                         <div v-for="(item, index) in visibleFields" :key="index" class="summary-item"
@@ -127,6 +137,35 @@ const selectedLabel = ref('');
 const originalData = ref<any>(null);
 const lastInfoIp = ref('');
 
+const hostPerceptionBanner = computed(() => {
+    if (props.info?.type !== 'HOST' || !fetchedData.value) return null;
+    if (fetchedData.value.loading) {
+        return {
+            type: 'loading',
+            icon: '⏳',
+            title: '正在感知',
+            desc: String(fetchedData.value.loading),
+        };
+    }
+    if (fetchedData.value.error) {
+        return {
+            type: 'error',
+            icon: '❌',
+            title: '感知失败',
+            desc: String(fetchedData.value.error),
+        };
+    }
+    if (originalData.value) {
+        return {
+            type: 'ready',
+            icon: '✅',
+            title: '感知数据已就绪',
+            desc: '点击拓扑图中的 CPU、GPU 或链路查看详细指标',
+        };
+    }
+    return null;
+});
+
 // 属性名翻译字典
 const labelMap: Record<string, string> = {
     memory: '内存容量',
@@ -159,15 +198,7 @@ const visibleFields = computed(() => {
     const data = fetchedData.value;
     console.log("@@@data", data);
     const items: { label: string; value: string | number; class?: string }[] = [];
-    // 如果是 HOST 类型：展示加载/就绪状态
     if (props.info?.type === 'HOST') {
-        if (fetchedData.value?.loading) {
-            items.push({ label: '状态', value: String(fetchedData.value.loading), class: 'data-item' });
-        } else if (fetchedData.value?.error) {
-            items.push({ label: '错误', value: String(fetchedData.value.error), class: 'data-item' });
-        } else if (originalData.value) {
-            items.push({ label: '感知状态', value: '数据已就绪，请点击 CPU/GPU/链路查看指标', class: 'data-item' });
-        }
         return items;
     }
     // 如果是 O_HOST 类型
@@ -447,12 +478,11 @@ const visibleFields = computed(() => {
 });
 
 const isSameGpu = (targetLabel: string) => {
-    // 当前 source GPU（例如 gpu1）
-    const sourceMatch = props.info?.label.match(/gpu(\d+)/i);
+    const sourcePart = (props.info as any)?.source ?? props.info?.label?.split('->')[0] ?? '';
+    const sourceMatch = sourcePart.match(/gpu(\d+)/i);
     const sourceIdx = sourceMatch ? parseInt(sourceMatch[1], 10) : null;
 
-    // 当前 option 的 target GPU（例如 gpu1）
-    const targetMatch = targetLabel.match(/gpu(\d+)/i);
+    const targetMatch = targetLabel.match(/^gpu(\d+)$/i);
     const targetIdx = targetMatch ? parseInt(targetMatch[1], 10) : null;
 
     return sourceIdx !== null && targetIdx !== null && sourceIdx === targetIdx;
@@ -998,6 +1028,57 @@ const enterNode = () => {
     border: 1px solid #eaecef;
 }
 
+.perception-banner {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin: 12px 0;
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
+}
+
+.perception-banner--loading {
+    border-color: #bfdbfe;
+    background: #eff6ff;
+}
+
+.perception-banner--ready {
+    border-color: #bbf7d0;
+    background: #f0fdf4;
+}
+
+.perception-banner--error {
+    border-color: #fecaca;
+    background: #fef2f2;
+}
+
+.perception-banner__icon {
+    font-size: 20px;
+    line-height: 1.2;
+    flex-shrink: 0;
+}
+
+.perception-banner__body {
+    flex: 1;
+    min-width: 0;
+}
+
+.perception-banner__title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 4px;
+}
+
+.perception-banner__desc {
+    font-size: 13px;
+    line-height: 1.5;
+    color: #64748b;
+    word-break: break-word;
+}
+
 
 /* 每个条目的样式 */
 .summary-item {
@@ -1084,6 +1165,10 @@ span.value {
 </style>
 
 <style>
+.node-title-select {
+    width: 100%;
+}
+
 /* .node-title-select>.el-select__wrapper {
     display: block;
     font-size: 18px;
@@ -1130,8 +1215,13 @@ span.value {
 
 .node-title-select>.el-select__wrapper>.el-select__selection {
     span {
-        font-size: 18px;
+        font-size: 14px;
         color: #0f172a;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 260px;
+        display: inline-block;
     }
 }
 </style>

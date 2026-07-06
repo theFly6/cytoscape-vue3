@@ -121,29 +121,26 @@ export function buildLinkPerception(
 
 /** 解析 Marslink GPU 下拉选项对应的目标 GPU 索引 */
 export function resolveGpuTargetFilter(selected: string): { isAll: boolean; targetIdx: number | null } {
-    if (!selected || selected.includes('gpu*')) {
+    if (!selected || /->\s*gpu\*$/i.test(selected)) {
         return { isAll: true, targetIdx: null };
     }
-    const arrowMatch = selected.match(/->\s*gpu(\d+)/i);
+    const arrowMatch = selected.match(/->\s*(?:gpu)?gpu(\d+)/i);
     if (arrowMatch) {
         return { isAll: false, targetIdx: parseInt(arrowMatch[1], 10) };
-    }
-    const matches = [...selected.matchAll(/gpu(\d+)/gi)];
-    if (matches.length > 0) {
-        return { isAll: false, targetIdx: parseInt(matches[matches.length - 1][1], 10) };
     }
     return { isAll: true, targetIdx: null };
 }
 
 export function formatLinkGpuOption(baseLabel: string, item: string, source?: string): string {
-    const template = baseLabel.includes('*') ? baseLabel : `${source ?? 'gpu'} -> gpu*`;
-    return template.replace('*', item);
+    const left = baseLabel.includes('->')
+        ? baseLabel.split('->')[0].trim()
+        : (source ?? baseLabel).trim();
+    return `${left} -> ${item}`;
 }
 
 export function initialLinkGpuSelection(info: { label?: string; source?: string; labels?: string[] }): string {
     if (!info.labels?.length) return '';
-    const base = info.label?.includes('*') ? info.label : `${info.source} -> gpu*`;
-    return base.replace('*', 'gpu*');
+    return formatLinkGpuOption(info.label ?? '', 'gpu*', info.source);
 }
 
 export async function fetchNodeDetail(ip: string, port: number | string) {
