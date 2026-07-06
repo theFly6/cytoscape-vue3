@@ -58,8 +58,13 @@
                 </div>
 
                 <div v-if="['HOST'].includes(info.type)" class="card-actions">
-                    <button class="primary-action" @click="viewMonitor()" :disabled="isLoading">
+                    <button v-if="!hasCachedPerceptionForCurrentHost" class="primary-action"
+                        @click="viewMonitor(false)" :disabled="isLoading">
                         <span>{{ isLoading ? '⏳ 感知中...' : '📈 节点内部拓扑感知' }}</span>
+                    </button>
+                    <button v-else class="primary-action primary-action--secondary" @click="viewMonitor(true)"
+                        :disabled="isLoading">
+                        <span>{{ isLoading ? '⏳ 感知中...' : '🔄 重新感知' }}</span>
                     </button>
                 </div>
 
@@ -117,6 +122,11 @@ import {
     resolveGpuTargetFilter,
     resolveNodeEndpoint,
 } from '@/views/index/utils/detailPerception';
+import {
+    getPerceptionCache,
+    hasPerceptionCache,
+    setPerceptionCache,
+} from '@/views/index/utils/perceptionCache';
 
 const { currentNodeId } = useTopologyStore();
 
@@ -137,6 +147,38 @@ const selectedLabel = ref('');
 const originalData = ref<any>(null);
 const lastInfoIp = ref('');
 
+function restorePerceptionFromCache(info: DetailInfo): boolean {
+    const { ip, port } = resolveNodeEndpoint(info);
+    if (!ip) return false;
+    const cached = getPerceptionCache(ip, port);
+    if (!cached) return false;
+    originalData.value = cached;
+    lastInfoIp.value = ip;
+    fetchedData.value = cached;
+    return true;
+}
+
+function ensureOriginalDataForInfo(info: DetailInfo | null): boolean {
+    if (!info) return false;
+    const { ip, port } = resolveNodeEndpoint(info);
+    const nodeIp = ip || lastInfoIp.value;
+    if (!nodeIp) return false;
+    if (originalData.value && lastInfoIp.value === nodeIp) return true;
+    const cached = getPerceptionCache(nodeIp, port);
+    if (cached) {
+        originalData.value = cached;
+        lastInfoIp.value = nodeIp;
+        return true;
+    }
+    return false;
+}
+
+const hasCachedPerceptionForCurrentHost = computed(() => {
+    if (props.info?.type !== 'HOST') return false;
+    const { ip, port } = resolveNodeEndpoint(props.info);
+    return ip ? hasPerceptionCache(ip, port) : false;
+});
+
 const hostPerceptionBanner = computed(() => {
     if (props.info?.type !== 'HOST' || !fetchedData.value) return null;
     if (fetchedData.value.loading) {
@@ -155,12 +197,14 @@ const hostPerceptionBanner = computed(() => {
             desc: String(fetchedData.value.error),
         };
     }
-    if (originalData.value) {
+    if (originalData.value || hasCachedPerceptionForCurrentHost.value) {
         return {
             type: 'ready',
             icon: '✅',
             title: '感知数据已就绪',
-            desc: '点击拓扑图中的 CPU、GPU 或链路查看详细指标',
+            desc: hasCachedPerceptionForCurrentHost.value
+                ? '已复用缓存数据，点击 CPU/GPU/链路查看；如需更新请点「重新感知」'
+                : '点击拓扑图中的 CPU、GPU 或链路查看详细指标',
         };
     }
     return null;
@@ -492,16 +536,24 @@ const isSameGpu = (targetLabel: string) => {
 watch(
     () => props.info,
     (newInfo: any) => {
-        if (!newInfo || !originalData.value) {
+        if (!newInfo) {
             fetchedData.value = null;
-            selectedLabel.value = initialLinkGpuSelection(newInfo ?? {});
             return;
         }
-        if (lastInfoIp.value && lastInfoIp.value !== (newInfo.ip || newInfo.properties?.ip)) {
+
+        if (newInfo.type === 'HOST') {
+            if (restorePerceptionFromCache(newInfo)) return;
             fetchedData.value = null;
             originalData.value = null;
             return;
         }
+
+        if (!ensureOriginalDataForInfo(newInfo)) {
+            fetchedData.value = null;
+            selectedLabel.value = initialLinkGpuSelection(newInfo);
+            return;
+        }
+
         if (newInfo.type === 'GPU') {
             fetchedData.value = {
                 measurement_info: originalData.value.measurement_info,
@@ -509,18 +561,12 @@ watch(
             };
             return;
         }
-        if (newInfo.type === 'HOST') {
-            if (lastInfoIp.value !== (newInfo.ip || newInfo.properties?.ip)) {
-                fetchedData.value = null;
-            } else {
-                fetchedData.value = originalData.value;
-            }
-            return;
-        }
+
         if (newInfo.type !== 'LINK') {
             fetchedData.value = null;
             return;
         }
+
         if (newInfo.labels) {
             selectedLabel.value = initialLinkGpuSelection(newInfo);
         }
@@ -546,10 +592,15 @@ const formattedProperties = computed(() => {
 
 const renderLabel = (key: string) => labelMap[key] || key;
 
-const viewMonitor = async () => {
+const viewMonitor = async (force = false) => {
     const { ip, port } = resolveNodeEndpoint(props.info ?? {});
     if (!ip) {
         ElMessage.warning('未找到节点 IP，请重新选择 HOST 节点');
+        return;
+    }
+
+    if (!force && hasPerceptionCache(ip, port)) {
+        restorePerceptionFromCache(props.info!);
         return;
     }
 
@@ -559,6 +610,7 @@ const viewMonitor = async () => {
     };
     try {
         const json = await fetchNodeDetail(ip, port);
+        setPerceptionCache(ip, port, json);
         originalData.value = json;
         lastInfoIp.value = ip;
         fetchedData.value = json;
@@ -1052,6 +1104,14 @@ const enterNode = () => {
 .perception-banner--error {
     border-color: #fecaca;
     background: #fef2f2;
+}
+
+.primary-action--secondary {
+    background: #64748b;
+}
+
+.primary-action--secondary:hover {
+    background: #475569;
 }
 
 .perception-banner__icon {
