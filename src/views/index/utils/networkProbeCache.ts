@@ -1,6 +1,10 @@
+import { ref } from 'vue';
 import { formatNetLinkEdgeLabel, type NetworkProbeResult } from './networkProbe';
 
 const cache = new Map<string, NetworkProbeResult>();
+
+/** 递增以触发 Vue 响应式更新（Map 本身不可追踪） */
+export const networkProbeCacheVersion = ref(0);
 
 export function oHostCacheKey(sourceIp: string): string {
     return `o_host:${sourceIp}`;
@@ -18,6 +22,7 @@ export function getNetworkProbeCache(key: string): NetworkProbeResult | undefine
 
 export function setNetworkProbeCache(key: string, data: NetworkProbeResult): void {
     cache.set(key, data);
+    networkProbeCacheVersion.value += 1;
 }
 
 export function hasNetworkProbeCache(key: string): boolean {

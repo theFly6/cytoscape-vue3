@@ -1,39 +1,46 @@
 # cytoscape-vue3
 
-This template should help get you started developing with Vue 3 in Vite.
+GPU / 集群拓扑可视化前端（Vue 3 + Cytoscape.js）。与 BFF 和探测层配合，支持单节点拓扑、子网拓扑、节点内/节点间拓扑感知。
 
-## Recommended IDE Setup
+## 相关仓库
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+| 组件 | GitHub |
+|------|--------|
+| 前端（本仓） | https://github.com/theFly6/cytoscape-vue3 |
+| BFF | https://github.com/theFly6/cytoscape-express |
+| 探测层 | https://github.com/theFly6/topo-server |
 
-## Type Support for `.vue` Imports in TS
+当前里程碑 Tag：**`release-20250706-tj`**（tj-24 平台）。发布说明见 [topo-server/docs/release-20250706-tj.md](https://github.com/theFly6/topo-server/blob/main/docs/release-20250706-tj.md)。
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+## 功能概览
 
-## Customize configuration
+- 侧边栏节点清单与子网 Overall 视图
+- 单节点 CPU / GPU / NUMA / 链路拓扑
+- **节点内拓扑感知**（topo-profiler 带宽/时延矩阵）
+- **节点间拓扑感知**（时延 + iperf3 带宽，结果缓存与边标签）
+- Mock 演示拓扑（`global_network`、`node_ai_01`）
 
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
+## 本地开发
 
 ```sh
 npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
+cp .env.example .env
+# VITE_API_BASE=http://localhost:3000
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+联调 tj-24 时先建 SSH 隧道：
+
+```powershell
+ssh -L 3000:127.0.0.1:3000 tj-24
+```
+
+## 构建
 
 ```sh
 npm run build
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+## License
 
-```sh
-npm run lint
-```
+MIT

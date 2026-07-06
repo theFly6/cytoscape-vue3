@@ -84,7 +84,7 @@
                     </button>
                     <button v-else class="primary-action primary-action--secondary"
                         @click="viewBetweenNodes(true)" :disabled="isLoading">
-                        <span>{{ isLoading ? '⏳ 探测中...' : '🔄 重新探测' }}</span>
+                        <span>{{ isLoading ? '⏳ 探测中...' : '🔄 重新进行节点间拓扑感知' }}</span>
                     </button>
                 </div>
 
@@ -142,12 +142,14 @@ import {
     getNetworkProbeCache,
     hasNetworkProbeCache,
     netLinkCacheKey,
+    networkProbeCacheVersion,
     oHostCacheKey,
     setNetworkProbeCache,
 } from '@/views/index/utils/networkProbeCache';
 import {
     getPerceptionCache,
     hasPerceptionCache,
+    perceptionCacheVersion,
     setPerceptionCache,
 } from '@/views/index/utils/perceptionCache';
 
@@ -202,6 +204,7 @@ function ensureOriginalDataForInfo(info: DetailInfo | null): boolean {
 }
 
 const hasCachedPerceptionForCurrentHost = computed(() => {
+    perceptionCacheVersion.value;
     if (props.info?.type !== 'HOST') return false;
     const { ip, port } = resolveNodeEndpoint(props.info);
     return ip ? hasPerceptionCache(ip, port) : false;
@@ -222,6 +225,7 @@ function resolveNetworkProbeCacheKey(info: DetailInfo | null): string | null {
 }
 
 const hasCachedNetworkProbe = computed(() => {
+    networkProbeCacheVersion.value;
     const key = resolveNetworkProbeCacheKey(props.info);
     return key ? hasNetworkProbeCache(key) : false;
 });
@@ -302,7 +306,7 @@ const networkProbeBanner = computed(() => {
             icon: '✅',
             title: '探测数据已就绪',
             desc: hasCachedNetworkProbe.value
-                ? '已复用缓存结果；如需更新请点「重新探测」'
+                ? '已复用缓存结果；如需更新请点「重新进行节点间拓扑感知」'
                 : '时延与带宽结果见下方摘要',
         };
     }

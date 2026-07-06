@@ -67,7 +67,7 @@ export async function fetchNetworkLatency(source: string, targets: string): Prom
 export async function fetchNetworkBandwidth(source: string, dests: string): Promise<BandwidthResponse> {
     const res = await api.get<BandwidthResponse>('/network/bandwidth', {
         params: { source, dests },
-        timeout: 180_000,
+        timeout: 120_000,
     });
     return res.data;
 }
@@ -93,11 +93,13 @@ export async function probeNetLink(
         latDataAB,
         latDataBA,
         bandwidthLoading: true,
-        message: '正在探测双向带宽（iperf3，可能需 1–2 分钟）...',
+        message: '正在并行探测双向带宽（短测 × 多次采样，约 20–40 秒）...',
     });
 
-    const bwJsonAB = await fetchNetworkBandwidth(sourceA, sourceB);
-    const bwJsonBA = await fetchNetworkBandwidth(sourceB, sourceA);
+    const [bwJsonAB, bwJsonBA] = await Promise.all([
+        fetchNetworkBandwidth(sourceA, sourceB),
+        fetchNetworkBandwidth(sourceB, sourceA),
+    ]);
 
     return {
         success: true,
@@ -123,7 +125,7 @@ export async function probeOHost(
     onPhase?.({
         latData: latJson,
         bandwidthLoading: true,
-        message: '正在探测到各节点的带宽（顺序执行，请耐心等待）...',
+        message: '正在探测到各节点的带宽（短测 × 多次采样）...',
     });
 
     const bwJson = await fetchNetworkBandwidth(sourceIp, targets);
